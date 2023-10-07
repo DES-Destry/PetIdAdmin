@@ -1,5 +1,5 @@
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 
 export default Vue.extend({
   props: {
@@ -15,18 +15,18 @@ export default Vue.extend({
       password: '',
 
       appendAlert(message: string, type: string) {
-        const alertPlaceholder = document.getElementById('liveErrorAlert')
-        const wrapper = document.createElement('div')
+        const alertPlaceholder = document.getElementById('liveErrorAlert');
+        const wrapper = document.createElement('div');
         wrapper.innerHTML = [
           `<div class="alert alert-${type} alert-dismissible fade show notification" role="alert" style="width: 60vw; font-size: 20px;">`,
           `   <div>${message}</div>`,
           '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
           '</div>',
-        ].join('')
+        ].join('');
 
-        alertPlaceholder?.append(wrapper)
+        alertPlaceholder?.append(wrapper);
       },
-    }
+    };
   },
   methods: {
     login() {
@@ -44,12 +44,12 @@ export default Vue.extend({
       //   return;
       // }
 
-      this.username = ''
-      this.password = ''
+      this.username = '';
+      this.password = '';
 
       // if (response?.status === 401) {
       if (this.username === '') {
-        this.appendAlert('Incorrect credentials!', 'danger')
+        this.appendAlert('Incorrect credentials!', 'danger');
         // return;
       }
 
@@ -59,7 +59,7 @@ export default Vue.extend({
       // );
     },
   },
-})
+});
 </script>
 
 <template>
@@ -93,7 +93,7 @@ export default Vue.extend({
           id="usernameInput"
           v-model="username"
           type="text"
-          class="form-control"
+          class="form-control bg-dark text-light"
           aria-describedby="username"
         />
       </div>
@@ -103,7 +103,7 @@ export default Vue.extend({
           id="passwordInput"
           v-model="password"
           type="password"
-          class="form-control"
+          class="form-control bg-dark text-light"
         />
       </div>
       <button type="button" class="btn btn-primary login-btn" @click="login">
