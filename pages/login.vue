@@ -32,7 +32,10 @@ export default Vue.extend({
   },
   methods: {
     async login() {
-      const response = await this.$adminController.login(this.username, this.password);
+      const response = await this.$adminController.login(
+        this.username,
+        this.password,
+      );
 
       if (response?.status === 200) {
         localStorage.setItem(LS.AccessToken, response.data.accessToken);
@@ -53,8 +56,8 @@ export default Vue.extend({
       }
 
       this.appendAlert(
-        "Something went really wrong... Exit this page forever",
-        "danger"
+        'Something went really wrong... Exit this page forever',
+        'danger',
       );
     },
   },
