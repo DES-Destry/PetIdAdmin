@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export default abstract class ControllerBase {
-  private readonly baseUrl: string | undefined = undefined;
   protected token: string | null = null;
+  private readonly baseUrl: string | undefined = undefined;
 
   constructor(baseUrl = '') {
     this.baseUrl = baseUrl;

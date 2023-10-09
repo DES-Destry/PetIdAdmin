@@ -75,47 +75,47 @@ export default Vue.extend({
       >
         Your <strong>15 minutes</strong> session was expired!
         <button
-          type="button"
+          aria-label="Close"
           class="btn-close"
           data-bs-dismiss="alert"
-          aria-label="Close"
+          type="button"
         ></button>
       </div>
 
       <div class="head">
-        <img class="ico" src="@/static/icon.png" alt="fut" />
+        <img alt="fut" class="ico" src="@/static/icon.png" />
         <h1 class="title">PetID Management</h1>
       </div>
     </div>
 
     <form class="log-form">
       <div class="mb-xl-4">
-        <label for="usernameInput" class="form-label">Username</label>
+        <label class="form-label" for="usernameInput">Username</label>
         <input
           id="usernameInput"
           v-model="username"
-          type="text"
-          class="form-control bg-dark text-light"
           aria-describedby="username"
+          class="form-control bg-dark text-light"
+          type="text"
         />
       </div>
       <div class="mb-xl-4">
-        <label for="passwordInput" class="form-label">Password</label>
+        <label class="form-label" for="passwordInput">Password</label>
         <input
           id="passwordInput"
           v-model="password"
-          type="password"
           class="form-control bg-dark text-light"
+          type="password"
         />
       </div>
-      <button type="button" class="btn btn-primary login-btn" @click="login">
+      <button class="btn btn-primary login-btn" type="button" @click="login">
         Login
       </button>
     </form>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .container {
   margin-top: 2vh;
 }
