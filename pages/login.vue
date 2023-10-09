@@ -1,5 +1,7 @@
 <script lang="ts">
+import '~/plugins/api';
 import Vue from 'vue';
+import LS from '~/store/constants/LS';
 
 export default Vue.extend({
   props: {
@@ -29,20 +31,17 @@ export default Vue.extend({
     };
   },
   methods: {
-    login() {
-      // const response = await AdminController.login(
-      //   this.username,
-      //   this.password
-      // );
+    async login() {
+      const response = await this.$adminController.login(this.username, this.password);
 
-      // if (response?.status === 200) {
-      //   localStorage.setItem(LS.AccessToken, response.data.accessToken);
-      //   localStorage.setItem(LS.AdminId, response.data.adminId);
-      //
-      //   // Go to profile if login is successful
-      //   this.$router.push({ name: "admin-profile" });
-      //   return;
-      // }
+      if (response?.status === 200) {
+        localStorage.setItem(LS.AccessToken, response.data.accessToken);
+        localStorage.setItem(LS.AdminId, response.data.adminId);
+
+        // Go to profile if login is successful
+        await this.$router.push('/profile');
+        return;
+      }
 
       this.username = '';
       this.password = '';
@@ -50,13 +49,13 @@ export default Vue.extend({
       // if (response?.status === 401) {
       if (this.username === '') {
         this.appendAlert('Incorrect credentials!', 'danger');
-        // return;
+        return;
       }
 
-      // this.appendAlert(
-      //   "Something went really wrong... Exit this page forever",
-      //   "danger"
-      // );
+      this.appendAlert(
+        "Something went really wrong... Exit this page forever",
+        "danger"
+      );
     },
   },
 });

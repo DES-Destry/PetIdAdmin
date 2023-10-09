@@ -1,15 +1,16 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Config from '@/assets/config';
 
 export default abstract class ControllerBase {
-  private static baseFutuructaUrl = Config.ApiBaseUrl;
-  protected static token: string | null;
+  private readonly baseUrl: string | undefined = undefined;
+  protected token: string | null = null;
 
-  public static async get<T>(
-    path: string,
-  ): Promise<AxiosResponse<T> | undefined> {
+  constructor(baseUrl = '') {
+    this.baseUrl = baseUrl;
+  }
+
+  public async get<T>(path: string): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.get(`${this.baseFutuructaUrl}${path}`, {
+      return await axios.get(`${this.baseUrl}${path}`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -21,14 +22,13 @@ export default abstract class ControllerBase {
     }
   }
 
-  public static async post<T>(
+  public async post<T>(
     path: string,
     body: unknown = null,
   ): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.post(`${this.baseFutuructaUrl}${path}`, body, {
+      return await axios.post(`${this.baseUrl}${path}`, body, {
         headers: {
-          'X-Version': '999999.0.0',
           Authorization: `Bearer ${this.token}`,
         },
       });
@@ -39,14 +39,13 @@ export default abstract class ControllerBase {
     }
   }
 
-  public static async put<T>(
+  public async put<T>(
     path: string,
     body: unknown = null,
   ): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.put(`${this.baseFutuructaUrl}${path}`, body, {
+      return await axios.put(`${this.baseUrl}${path}`, body, {
         headers: {
-          'X-Version': '999999.0.0',
           Authorization: `Bearer ${this.token}`,
         },
       });
@@ -57,14 +56,11 @@ export default abstract class ControllerBase {
     }
   }
 
-  public static async delete<T>(
-    path: string,
-  ): Promise<AxiosResponse<T> | undefined> {
+  public async delete<T>(path: string): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.delete(`${this.baseFutuructaUrl}${path}`, {
+      return await axios.delete(`${this.baseUrl}${path}`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
-          'X-Version': '999999.0.0',
         },
       });
     } catch (err) {

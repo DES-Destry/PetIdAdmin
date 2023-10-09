@@ -4,15 +4,15 @@ import { LoginDto } from '~/api/dto/login.dto';
 import LS from '~/store/constants/LS';
 
 export class AdminController extends ControllerBase {
-  public static setToken(token: string | null): void {
+  public setToken(token: string | null): void {
     this.token = token;
   }
 
-  public static async auth() {
+  public async auth() {
     return await this.get<AdminDto>('/api/admin/auth');
   }
 
-  public static async login(
+  public async login(
     username: string,
     password: string,
   ): Promise<any | undefined> {
