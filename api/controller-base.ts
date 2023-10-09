@@ -1,16 +1,18 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { Axios, AxiosError, AxiosResponse } from 'axios';
 
 export default abstract class ControllerBase {
   protected token: string | null = null;
   private readonly baseUrl: string | undefined = undefined;
+  private readonly $axios: Axios;
 
-  constructor(baseUrl = '') {
+  constructor(baseUrl = '', nuxtAxios: Axios = axios) {
     this.baseUrl = baseUrl;
+    this.$axios = nuxtAxios;
   }
 
   public async get<T>(path: string): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.get(`${this.baseUrl}${path}`, {
+      return await this.$axios.get(`${this.baseUrl}${path}`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -27,7 +29,7 @@ export default abstract class ControllerBase {
     body: unknown = null,
   ): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.post(`${this.baseUrl}${path}`, body, {
+      return await this.$axios.post(`${this.baseUrl}${path}`, body, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -44,7 +46,7 @@ export default abstract class ControllerBase {
     body: unknown = null,
   ): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.put(`${this.baseUrl}${path}`, body, {
+      return await this.$axios.put(`${this.baseUrl}${path}`, body, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -58,7 +60,7 @@ export default abstract class ControllerBase {
 
   public async delete<T>(path: string): Promise<AxiosResponse<T> | undefined> {
     try {
-      return await axios.delete(`${this.baseUrl}${path}`, {
+      return await this.$axios.delete(`${this.baseUrl}${path}`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },

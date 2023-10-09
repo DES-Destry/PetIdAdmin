@@ -9,7 +9,8 @@ declare module 'vue/types/vue' {
 // @ts-ignore
 export default ({ app }, inject) => {
   const baseURL = app?.$config?.apiBaseUrl;
-  const adminController = new AdminController(baseURL);
+  const axios = app?.$axios;
+  const adminController = new AdminController(baseURL, axios);
 
   inject('adminController', adminController);
 };
