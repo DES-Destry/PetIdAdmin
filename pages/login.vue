@@ -1,5 +1,4 @@
 <script lang="ts">
-import '~/plugins/api';
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 
@@ -15,19 +14,6 @@ export default Vue.extend({
     return {
       username: '',
       password: '',
-
-      appendAlert(message: string, type: string) {
-        const alertPlaceholder = document.getElementById('liveErrorAlert');
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = [
-          `<div class="alert alert-${type} alert-dismissible fade show notification" role="alert" style="width: 60vw; font-size: 20px;">`,
-          `   <div>${message}</div>`,
-          '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-          '</div>',
-        ].join('');
-
-        alertPlaceholder?.append(wrapper);
-      },
     };
   },
   methods: {
@@ -49,13 +35,12 @@ export default Vue.extend({
       this.username = '';
       this.password = '';
 
-      // if (response?.status === 401) {
-      if (this.username === '') {
-        this.appendAlert('Incorrect credentials!', 'danger');
+      if (response?.status === 401) {
+        this.$alert.show('Incorrect credentials!', 'danger');
         return;
       }
 
-      this.appendAlert(
+      this.$alert.show(
         'Something went really wrong... Exit this page forever',
         'danger',
       );
@@ -70,14 +55,14 @@ export default Vue.extend({
       <div id="liveErrorAlert"></div>
       <div
         v-if="expired"
-        class="alert alert-danger alert-dismissible fade show notification"
+        class="alert alert-danger alert-dismissible fade show"
         role="alert"
       >
-        Your <strong>15 minutes</strong> session was expired!
+        Your <strong>10 minutes</strong> session was expired!
         <button
           aria-label="Close"
-          class="btn-close"
-          data-bs-dismiss="alert"
+          class="close"
+          data-dismiss="alert"
           type="button"
         ></button>
       </div>
@@ -124,11 +109,6 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.notification {
-  width: 60vw !important;
-  font-size: 20px;
 }
 
 .warning-svg {
