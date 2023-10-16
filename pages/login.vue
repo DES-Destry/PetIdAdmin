@@ -41,7 +41,7 @@ export default Vue.extend({
       }
 
       this.$alert.show(
-        'Something went really wrong... Exit this page forever',
+        'Something went wrong... Real shit is happening',
         'danger',
       );
     },
@@ -93,7 +93,11 @@ export default Vue.extend({
           type="password"
         />
       </div>
-      <button class="btn btn-primary login-btn mb-xl-4" type="button" @click="login">
+      <button
+        class="btn btn-primary login-btn mb-xl-4"
+        type="button"
+        @click="login"
+      >
         Login
       </button>
     </form>

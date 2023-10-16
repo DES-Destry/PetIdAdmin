@@ -8,8 +8,8 @@ export class Alert implements IAlert {
     const wrapper = document.createElement('div');
     // role="alert" style="width: 60vw; font-size: 20px;"
     wrapper.innerHTML = `
-    <div class="alert alert-${type} alert-dismissible fade show" style="width: 50vw; font-size: 20px;">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+    <div class="alert alert-${type} alert-dismissible fade show" style="width: 50vw; font-size: 20px;" role="alert">
+        <button type="button" class="btn-close close" data-bs-dismiss="alert" data-dismiss="alert" aria-label="Close"></button>
         <div>${message}</div>
     </div>
     `;

@@ -14,4 +14,5 @@ module.exports = {
   rules: {
     'comma-dangle': 'off',
   },
+  ignorePatterns: ['nuxt.config.js'],
 };
