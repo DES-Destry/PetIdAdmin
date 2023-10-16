@@ -1,5 +1,6 @@
 <script lang="ts">
 import Vue from 'vue';
+import {HttpStatusCode} from "axios";
 import LS from '~/store/constants/LS';
 
 export default Vue.extend({
@@ -23,7 +24,7 @@ export default Vue.extend({
         this.password,
       );
 
-      if (response?.status === 200) {
+      if (response?.status === HttpStatusCode.Created) {
         localStorage.setItem(LS.AccessToken, response.data.accessToken);
         localStorage.setItem(LS.AdminId, response.data.adminId);
 
@@ -35,7 +36,7 @@ export default Vue.extend({
       this.username = '';
       this.password = '';
 
-      if (response?.status === 401) {
+      if (response?.status === HttpStatusCode.Unauthorized) {
         this.$alert.show('Incorrect credentials!', 'danger');
         return;
       }
