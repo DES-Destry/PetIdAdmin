@@ -93,7 +93,7 @@ export default Vue.extend({
           type="password"
         />
       </div>
-      <button class="btn btn-primary login-btn" type="button" @click="login">
+      <button class="btn btn-primary login-btn mb-xl-4" type="button" @click="login">
         Login
       </button>
     </form>
@@ -147,10 +147,21 @@ export default Vue.extend({
   margin-top: 10vh;
   margin-left: 15vw;
   margin-right: 15vw;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  div {
+    width: 40vw;
+  }
+
+  button {
+    width: 30vw;
+  }
 }
 
 .login-btn {
   font-size: 24px;
-  width: 10vw;
 }
 </style>
