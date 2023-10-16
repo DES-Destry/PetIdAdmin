@@ -1,7 +1,8 @@
 <script lang="ts">
 import Vue from 'vue';
-import {HttpStatusCode} from "axios";
+import { HttpStatusCode } from 'axios';
 import LS from '~/store/constants/LS';
+import ControllerBase from '~/api/controller-base';
 
 export default Vue.extend({
   props: {
@@ -24,7 +25,7 @@ export default Vue.extend({
         this.password,
       );
 
-      if (response?.status === HttpStatusCode.Created) {
+      if (ControllerBase.isSuccess(response?.status)) {
         localStorage.setItem(LS.AccessToken, response.data.accessToken);
         localStorage.setItem(LS.AdminId, response.data.adminId);
 
