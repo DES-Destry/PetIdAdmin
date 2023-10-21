@@ -61,7 +61,10 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['bootstrap-vue']
+  },
+  // plugins: ['@/plugins/bt-vue']
 
   publicRuntimeConfig: {
     apiBaseUrl: process.env.API_BASE_URL
@@ -69,6 +72,6 @@ export default {
 
   bootstrapVue: {
     icons: true,
-    componentPlugins: ['IconsPlugin']
+    componentPlugins: ['IconsPlugin', 'AlertPlugin']
   }
 };

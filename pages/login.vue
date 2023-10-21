@@ -11,7 +11,6 @@ export default Vue.extend({
       default: false,
     },
   },
-
   data: function () {
     return {
       username: '',
@@ -38,23 +37,20 @@ export default Vue.extend({
       this.password = '';
 
       if (response?.status === HttpStatusCode.Unauthorized) {
-        this.$alert.show('Incorrect credentials!', 'danger');
+        this.$alert('Incorrect credentials!', 'danger');
         return;
       }
 
-      this.$alert.show(
-        'Something went wrong... Real shit is happening',
-        'danger',
-      );
+      this.$alert('Something went wrong... Real shit is happening', 'danger');
     },
   },
 });
 </script>
 
 <template>
-  <div class="container">
+  <div id="app" class="container">
     <div class="top">
-      <div id="liveErrorAlert"></div>
+      <div id="alertContainer"></div>
       <div
         v-if="expired"
         class="alert alert-danger alert-dismissible fade show"
