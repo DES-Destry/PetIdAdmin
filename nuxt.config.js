@@ -21,7 +21,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['bootstrap/dist/css/bootstrap.css', 'bootstrap-vue/dist/bootstrap-vue.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: ['~/plugins/api.ts', '~/plugins/alerts.ts'],
@@ -72,6 +72,9 @@ export default {
 
   bootstrapVue: {
     icons: true,
-    componentPlugins: ['IconsPlugin', 'AlertPlugin']
+    components: ['BContainer', 'BRow', 'BCol', 'BFormInput', 'BButton', 'BTable', 'BModal'],
+    componentPlugins: ['IconsPlugin', 'AlertPlugin'],
+    bootstrapCSS: false,
+    bootstrapVueCSS: false
   }
 };

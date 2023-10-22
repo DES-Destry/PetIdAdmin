@@ -37,7 +37,7 @@ export default Vue.extend({
       this.password = '';
 
       if (response?.status === HttpStatusCode.Unauthorized) {
-        this.$alert('Incorrect credentials!', 'danger');
+        this.$alert('Incorrect credentials!', 'warning');
         return;
       }
 
@@ -49,56 +49,58 @@ export default Vue.extend({
 
 <template>
   <div id="app" class="container">
-    <div class="top">
-      <div id="alertContainer"></div>
-      <div
-        v-if="expired"
-        class="alert alert-danger alert-dismissible fade show"
-        role="alert"
-      >
-        Your <strong>10 minutes</strong> session was expired!
+    <b-container>
+      <div class="top">
+        <div id="alertContainer"></div>
+        <div
+          v-if="expired"
+          class="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          Your <strong>10 minutes</strong> session was expired!
+          <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="alert"
+            type="button"
+          ></button>
+        </div>
+
+        <div class="head">
+          <img alt="fut" class="ico" src="@/static/icon.png" />
+          <h1 class="title">PetID Management</h1>
+        </div>
+      </div>
+
+      <form class="log-form">
+        <div class="mb-xl-4">
+          <label class="form-label" for="usernameInput">Username</label>
+          <input
+            id="usernameInput"
+            v-model="username"
+            aria-describedby="username"
+            class="form-control bg-dark text-light"
+            type="text"
+          />
+        </div>
+        <div class="mb-xl-4">
+          <label class="form-label" for="passwordInput">Password</label>
+          <input
+            id="passwordInput"
+            v-model="password"
+            class="form-control bg-dark text-light"
+            type="password"
+          />
+        </div>
         <button
-          aria-label="Close"
-          class="close"
-          data-dismiss="alert"
+          class="btn btn-primary login-btn mb-xl-4"
           type="button"
-        ></button>
-      </div>
-
-      <div class="head">
-        <img alt="fut" class="ico" src="@/static/icon.png" />
-        <h1 class="title">PetID Management</h1>
-      </div>
-    </div>
-
-    <form class="log-form">
-      <div class="mb-xl-4">
-        <label class="form-label" for="usernameInput">Username</label>
-        <input
-          id="usernameInput"
-          v-model="username"
-          aria-describedby="username"
-          class="form-control bg-dark text-light"
-          type="text"
-        />
-      </div>
-      <div class="mb-xl-4">
-        <label class="form-label" for="passwordInput">Password</label>
-        <input
-          id="passwordInput"
-          v-model="password"
-          class="form-control bg-dark text-light"
-          type="password"
-        />
-      </div>
-      <button
-        class="btn btn-primary login-btn mb-xl-4"
-        type="button"
-        @click="login"
-      >
-        Login
-      </button>
-    </form>
+          @click="login"
+        >
+          Login
+        </button>
+      </form>
+    </b-container>
   </div>
 </template>
 
