@@ -7,7 +7,7 @@ export default Vue.extend({
     return {
       username: 'Loading...',
       isNotCapable: true,
-      passwordChangedAt: new Date(0),
+      passwordLastChangedAt: new Date(0),
       createdAt: new Date(0),
 
       oldPassword: '',
@@ -18,10 +18,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    passwordInfo() {
+    passwordInfo: function () {
       if (this.username === '') return '';
 
-      if (this.passwordChangedAt.getTime() === 0) {
+      if (this.passwordLastChangedAt.getTime() === 0) {
         const deletionTime = new Date();
         deletionTime.setDate(this.createdAt.getDate() + 1);
         deletionTime.setSeconds(this.createdAt.getSeconds());
@@ -34,7 +34,7 @@ export default Vue.extend({
                 )}`;
       }
 
-      return `Password last changed at: ${this.passwordChangedAt.toLocaleString(
+      return `Password last changed at: ${this.passwordLastChangedAt.toLocaleString(
         'en-US',
       )}`;
     },
@@ -71,7 +71,7 @@ export default Vue.extend({
 
     this.username = authResponse.data.username;
     this.isNotCapable = authResponse.data.isNotCapable;
-    this.passwordChangedAt = new Date(
+    this.passwordLastChangedAt = new Date(
       authResponse.data.passwordLastChangedAt ?? 0,
     );
     this.createdAt = new Date(authResponse.data.createdAt);
@@ -129,7 +129,7 @@ export default Vue.extend({
         data-bs-target="#editModal"
       >
         Edit profile
-        <i class="bi bi-pencil-square"></i>
+        <b-icon icon="pencil-square"></b-icon>
       </button>
 
       <!-- Change password Modal -->

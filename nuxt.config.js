@@ -62,9 +62,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['bootstrap-vue']
+    transpile: ['bootstrap-vue'],
+    babel: {
+      compact: true
+    }
   },
-  // plugins: ['@/plugins/bt-vue']
 
   publicRuntimeConfig: {
     apiBaseUrl: process.env.API_BASE_URL

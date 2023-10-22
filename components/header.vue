@@ -57,9 +57,9 @@ export default Vue.extend({
     <div class="main">
       <div class="app-name">
         <button type="button" class="btn btn-outline-dark back" @click="back">
-          <i class="bi bi-arrow-left"></i>
+          <b-icon icon="arrow-left"></b-icon>
         </button>
-        <img class="ico" src="@/static/icon.png" alt="fut" />
+        <img class="ico" src="@/static/icon.png" alt="petid" />
         <h1 class="title">PetID Management</h1>
       </div>
       <div class="user">
@@ -72,7 +72,7 @@ export default Vue.extend({
           @click="logout"
         >
           Logout
-          <i class="bi bi-box-arrow-right"></i>
+          <b-icon icon="box-arrow-right"></b-icon>
         </button>
       </div>
     </div>
