@@ -17,6 +17,11 @@ export default Vue.extend({
       password: '',
     };
   },
+  mounted() {
+    if (this.expired) {
+      this.$alert(`Your <strong>10 minutes</strong> session was expired!`, 'danger');
+    }
+  },
   methods: {
     async login() {
       const response = await this.$adminController.login(
@@ -52,19 +57,6 @@ export default Vue.extend({
     <b-container>
       <div class="top">
         <div id="alertContainer"></div>
-        <div
-          v-if="expired"
-          class="alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          Your <strong>10 minutes</strong> session was expired!
-          <button
-            aria-label="Close"
-            class="close"
-            data-dismiss="alert"
-            type="button"
-          ></button>
-        </div>
 
         <div class="head">
           <img alt="fut" class="ico" src="@/static/icon.png" />
