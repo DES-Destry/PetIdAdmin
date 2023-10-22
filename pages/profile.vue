@@ -167,7 +167,7 @@ export default Vue.extend({
             id="floatingOldPassword"
             v-model="oldPassword"
             type="password"
-            class="form-control"
+            class="form-control bg-dark text-light"
           />
         </div>
         <div class="form-floating password-input mb-3">
@@ -176,7 +176,7 @@ export default Vue.extend({
             id="floatingPassword"
             v-model="newPassword"
             type="password"
-            class="form-control"
+            class="form-control bg-dark text-light"
             @change="passwordEditTextsChanged"
           />
         </div>
@@ -186,7 +186,7 @@ export default Vue.extend({
             id="floatingRepeatPassword"
             v-model="repeatNewPassword"
             type="password"
-            class="form-control"
+            class="form-control bg-dark text-light"
             @change="passwordEditTextsChanged"
           />
         </div>
