@@ -75,7 +75,7 @@ export default {
   bootstrapVue: {
     icons: true,
     components: ['BContainer', 'BRow', 'BCol', 'BFormInput', 'BButton', 'BTable', 'BModal'],
-    componentPlugins: ['IconsPlugin', 'AlertPlugin'],
+    componentPlugins: ['IconsPlugin', 'AlertPlugin', 'ModalPlugin'],
     bootstrapCSS: false,
     bootstrapVueCSS: false
   }

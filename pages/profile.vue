@@ -18,7 +18,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    passwordInfo: function () {
+    passwordInfo() {
       if (this.username === '') return '';
 
       if (this.passwordLastChangedAt.getTime() === 0) {
@@ -37,6 +37,9 @@ export default Vue.extend({
       return `Password last changed at: ${this.passwordLastChangedAt.toLocaleString(
         'en-US',
       )}`;
+    },
+    isPasswordSavingAvailable() {
+      return this.newPassword !== '' && this.passwordEditErrorText === '';
     },
   },
   // Extract data from token on load
@@ -77,10 +80,20 @@ export default Vue.extend({
     this.createdAt = new Date(authResponse.data.createdAt);
   },
   methods: {
+    resetPasswordModal() {
+      this.oldPassword = '';
+      this.newPassword = '';
+      this.repeatNewPassword = '';
+      this.passwordEditErrorText = '';
+    },
     passwordEditTextsChanged() {
+      if (this.newPassword === '') {
+        this.passwordEditErrorText = '';
+        return;
+      }
+
       if (this.newPassword !== this.repeatNewPassword) {
         this.passwordEditErrorText = 'You must correctly repeat new password!';
-        this.isPasswordSaveButtonDisabled = true;
         return;
       }
 
@@ -89,15 +102,13 @@ export default Vue.extend({
 
       if (!strongPassword.test(this.newPassword)) {
         this.passwordEditErrorText = 'You must create more secure password!';
-        this.isPasswordSaveButtonDisabled = true;
         return;
       }
 
-      this.isPasswordSaveButtonDisabled =
-        this.oldPassword === '' || this.newPassword === '';
       this.passwordEditErrorText = '';
     },
-    async saveNewPassword() {
+    saveNewPassword() {
+      this.$alert('Password have changed successfully!', 'success');
       // const changePasswordResponse = await AdminController.changePassword(
       //   this.oldPassword,
       //   this.newPassword
@@ -117,104 +128,83 @@ export default Vue.extend({
 
 <template>
   <div class="container">
-    <div id="liveResultAlert"></div>
+    <div id="alertContainer"></div>
     <div class="main">
+      <h1>Hello!</h1>
       <h1 class="avatar">🧑‍💻</h1>
       <h1 class="username">{{ username }}</h1>
       <p class="password">{{ passwordInfo }}</p>
-      <button
+      <b-button
+        v-b-modal.passwordModal
+        class="edit-profile"
         type="button"
-        class="btn btn-primary edit-profile mb-xl-4"
-        data-bs-toggle="modal"
-        data-bs-target="#editModal"
+        variant="primary"
       >
-        Edit profile
+        Edit password
         <b-icon icon="pencil-square"></b-icon>
-      </button>
+      </b-button>
 
       <!-- Change password Modal -->
-      <div
-        id="editModal"
+      <b-modal
+        id="passwordModal"
+        centered
         class="modal fade"
-        tabindex="-1"
-        aria-labelledby="editModalLabel"
-        aria-hidden="true"
+        title="Edit password"
+        header-bg-variant="primary"
+        header-text-variant="light"
+        body-bg-variant="dark"
+        body-text-variant="light"
+        footer-bg-variant="dark"
+        footer-text-variant="light"
+        @show="resetPasswordModal"
+        @cancel="resetPasswordModal"
+        @hidden="resetPasswordModal"
+        @ok="saveNewPassword"
       >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 id="editModalLabel" class="modal-title fs-5">
-                Edit your profile
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <h1 id="editModalLabel" class="modal-title fs-5">
-              Edit your password
-            </h1>
-
-            <div class="form-floating password-input mb-3">
-              <input
-                id="floatingOldPassword"
-                v-model="oldPassword"
-                type="password"
-                class="form-control"
-                placeholder="Old password"
-              />
-              <label for="floatingOldPassword">Old password</label>
-            </div>
-            <div class="form-floating password-input mb-3">
-              <input
-                id="floatingPassword"
-                v-model="newPassword"
-                type="password"
-                class="form-control"
-                placeholder="New password"
-                @change="passwordEditTextsChanged"
-              />
-              <label for="floatingPassword">New password</label>
-            </div>
-            <div class="form-floating password-input mb-3">
-              <input
-                id="floatingRepeatPassword"
-                v-model="repeatNewPassword"
-                type="password"
-                class="form-control"
-                placeholder="Repeat new password"
-                @change="passwordEditTextsChanged"
-              />
-              <label for="floatingRepeatPassword">Repeat new password</label>
-            </div>
-
-            <h3 id="errorPasswordLabel" class="modal-title fs-5">
-              {{ passwordEditErrorText }}
-            </h3>
-
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                class="btn btn-success"
-                data-bs-dismiss="modal"
-                :disabled="isPasswordSaveButtonDisabled"
-                @click="saveNewPassword"
-              >
-                Save changes
-              </button>
-            </div>
-          </div>
+        <div class="form-floating password-input mb-3">
+          <label for="floatingPassword">Old password</label>
+          <input
+            id="floatingOldPassword"
+            v-model="oldPassword"
+            type="password"
+            class="form-control"
+          />
         </div>
-      </div>
+        <div class="form-floating password-input mb-3">
+          <label for="floatingPassword">New password</label>
+          <input
+            id="floatingPassword"
+            v-model="newPassword"
+            type="password"
+            class="form-control"
+            @change="passwordEditTextsChanged"
+          />
+        </div>
+        <div class="form-floating password-input mb-3">
+          <label for="floatingRepeatPassword">Repeat new password</label>
+          <input
+            id="floatingRepeatPassword"
+            v-model="repeatNewPassword"
+            type="password"
+            class="form-control"
+            @change="passwordEditTextsChanged"
+          />
+        </div>
+
+        <h3 id="errorPasswordLabel" class="modal-title fs-5">
+          {{ passwordEditErrorText }}
+        </h3>
+
+        <template #modal-footer="{ ok, cancel }">
+          <b-button variant="danger" @click="cancel()">Cancel</b-button>
+          <b-button
+            :disabled="!isPasswordSavingAvailable"
+            variant="success"
+            @click="ok()"
+            >Apply changes</b-button
+          >
+        </template>
+      </b-modal>
     </div>
 
     <div class="controls">
@@ -247,7 +237,7 @@ export default Vue.extend({
   align-items: center;
 }
 
-#liveResultAlert {
+#alertContainer {
   width: 60vw;
   font-size: 20px;
 }
@@ -298,10 +288,10 @@ export default Vue.extend({
   }
 }
 
-#editModalLabel {
-  margin-top: 10px;
-  margin-bottom: 5px;
-}
+//#editModalLabel {
+//  margin-top: 10px;
+//  margin-bottom: 5px;
+//}
 
 .password-input {
   margin-right: 10px;
@@ -309,11 +299,13 @@ export default Vue.extend({
 }
 
 #errorPasswordLabel {
-  color: darkred;
+  color: red;
+  text-align: center;
+  font-size: 22px;
 }
 
-.modal,
-.fade {
-  z-index: 9999999999999 !important;
-}
+//.modal,
+//.fade {
+//  z-index: 9999999999999 !important;
+//}
 </style>
