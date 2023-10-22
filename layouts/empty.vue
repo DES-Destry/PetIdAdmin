@@ -1,6 +1,5 @@
 <template>
   <div data-bs-theme="dark">
-    <Header />
     <Nuxt />
   </div>
 </template>

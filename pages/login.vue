@@ -5,6 +5,7 @@ import LS from '~/store/constants/LS';
 import ControllerBase from '~/api/controller-base';
 
 export default Vue.extend({
+  layout: 'empty',
   props: {
     expired: {
       type: Boolean,
@@ -19,7 +20,10 @@ export default Vue.extend({
   },
   mounted() {
     if (this.expired) {
-      this.$alert(`Your <strong>10 minutes</strong> session was expired!`, 'danger');
+      this.$alert(
+        `Your <strong>10 minutes</strong> session was expired!`,
+        'danger',
+      );
     }
   },
   methods: {
@@ -32,6 +36,7 @@ export default Vue.extend({
       if (ControllerBase.isSuccess(response?.status)) {
         localStorage.setItem(LS.AccessToken, response.data.accessToken);
         localStorage.setItem(LS.AdminId, response.data.adminId);
+        this.$adminController.setToken(response.data.accessToken);
 
         // Go to profile if login is successful
         await this.$router.push('/profile');
