@@ -3,7 +3,7 @@
     <b-alert show fade :variant="variant" style="width: 50vw; font-size: 30px">
       <div class="d-flex justify-content-between align-items-center">
         <div ref="messageDiv"></div>
-        <b-button :variant="variant" @click="closeAlert">&times;</b-button>
+        <b-button pill :variant="variant" @click="closeAlert">&times;</b-button>
       </div>
     </b-alert>
   </div>
