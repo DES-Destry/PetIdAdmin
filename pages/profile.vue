@@ -19,6 +19,8 @@ export default Vue.extend({
   },
   computed: {
     passwordInfo() {
+      if (this.username === '') return '';
+
       if (this.passwordChangedAt.getTime() === 0) {
         const deletionTime = new Date();
         deletionTime.setDate(this.createdAt.getDate() + 1);
