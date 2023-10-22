@@ -56,7 +56,7 @@ export default Vue.extend({
   <div class="container" data-bs-theme="dark">
     <div class="main">
       <div class="app-name">
-        <button type="button" class="btn btn-outline-dark back" @click="back">
+        <button type="button" class="btn btn-outline-light back" @click="back">
           <b-icon icon="arrow-left"></b-icon>
         </button>
         <img class="ico" src="@/static/icon.png" alt="petid" />
