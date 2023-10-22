@@ -22,21 +22,25 @@ export default Vue.extend({
       if (this.username === '') return '';
 
       if (this.passwordLastChangedAt.getTime() === 0) {
+        return `This profile hasn't a password - only limited functionality works. SET IT IMMEDIATELY!`;
+      }
+
+      return `Password last changed at: ${this.passwordLastChangedAt.toLocaleString(
+        'en-US',
+      )}`;
+    },
+    accountDeletionInfo() {
+      if (this.username !== '' && this.passwordLastChangedAt.getTime() === 0) {
         const deletionTime = new Date();
         deletionTime.setDate(this.createdAt.getDate() + 1);
         deletionTime.setSeconds(this.createdAt.getSeconds());
         deletionTime.setMinutes(this.createdAt.getMinutes());
         deletionTime.setHours(this.createdAt.getHours());
 
-        return `This profile hasn't a password - only limited functionality works. SET IT IMMEDIATELY!\n
-                Time of account auto-deletion: ${deletionTime.toLocaleString(
-                  'en-US',
-                )}`;
+        return `Time of account auto-deletion: ${deletionTime.toLocaleString('en-US')}`;
       }
 
-      return `Password last changed at: ${this.passwordLastChangedAt.toLocaleString(
-        'en-US',
-      )}`;
+      return '';
     },
     isPasswordSavingAvailable() {
       return this.newPassword !== '' && this.passwordEditErrorText === '';
@@ -128,15 +132,21 @@ export default Vue.extend({
 
 <template>
   <div class="container">
-    <div id="alertContainer"></div>
     <div class="main">
+      <div id="alertContainer"></div>
       <h1>Hello!</h1>
       <h1 class="avatar">🧑‍💻</h1>
       <h1 class="username">{{ username }}</h1>
+
+      <div class="line"></div>
+      <hr/>
+
       <p class="password">{{ passwordInfo }}</p>
+      <p class="account-deletion">{{ accountDeletionInfo }}</p>
+
       <b-button
         v-b-modal.passwordModal
-        class="edit-profile"
+        class="edit-password-button"
         type="button"
         variant="primary"
       >
@@ -207,7 +217,7 @@ export default Vue.extend({
       </b-modal>
     </div>
 
-    <div class="controls">
+<!--    <div class="controls">-->
       <!--      <OptionNavigator-->
       <!--        class="control-item"-->
       <!--        title="Find user"-->
@@ -225,7 +235,7 @@ export default Vue.extend({
       <!--        title="FutuructaTrail"-->
       <!--        page="trail"-->
       <!--      />-->
-    </div>
+<!--    </div>-->
   </div>
 </template>
 
@@ -237,17 +247,13 @@ export default Vue.extend({
   align-items: center;
 }
 
-#alertContainer {
-  width: 60vw;
-  font-size: 20px;
-}
-
 .main {
   margin-top: 8vh;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-content: center;
 }
 
 .avatar {
@@ -260,12 +266,18 @@ export default Vue.extend({
   text-align: center;
 }
 
-.password {
+.password, .account-deletion {
   font-size: 28px;
   text-align: center;
 }
 
-.edit-profile {
+.line {
+  background: #fff;
+  height: 1px;
+  width: 80vw;
+}
+
+.edit-password-button {
   font-size: 28px;
   width: 40vw;
 }
@@ -288,11 +300,6 @@ export default Vue.extend({
   }
 }
 
-//#editModalLabel {
-//  margin-top: 10px;
-//  margin-bottom: 5px;
-//}
-
 .password-input {
   margin-right: 10px;
   margin-left: 10px;
@@ -303,9 +310,4 @@ export default Vue.extend({
   text-align: center;
   font-size: 22px;
 }
-
-//.modal,
-//.fade {
-//  z-index: 9999999999999 !important;
-//}
 </style>

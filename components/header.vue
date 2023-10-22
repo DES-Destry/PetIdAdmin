@@ -89,6 +89,7 @@ export default Vue.extend({
   width: 100vw;
   height: 80px;
 
+  background: #151515;
   border-bottom: 1px solid #696969;
 
   z-index: 99;
