@@ -1,119 +1,107 @@
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
+import { HttpStatusCode } from 'axios';
+import LS from '~/store/constants/LS';
+import ControllerBase from '~/api/controller-base';
 
 export default Vue.extend({
+  layout: 'empty',
   props: {
     expired: {
       type: Boolean,
       default: false,
     },
   },
-
   data: function () {
     return {
       username: '',
       password: '',
-
-      appendAlert(message: string, type: string) {
-        const alertPlaceholder = document.getElementById('liveErrorAlert')
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = [
-          `<div class="alert alert-${type} alert-dismissible fade show notification" role="alert" style="width: 60vw; font-size: 20px;">`,
-          `   <div>${message}</div>`,
-          '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-          '</div>',
-        ].join('')
-
-        alertPlaceholder?.append(wrapper)
-      },
+    };
+  },
+  mounted() {
+    if (this.expired) {
+      this.$alert(
+        `Your <strong>10 minutes</strong> session was expired!`,
+        'danger',
+      );
     }
   },
   methods: {
-    login() {
-      // const response = await AdminController.login(
-      //   this.username,
-      //   this.password
-      // );
+    async login() {
+      const response = await this.$adminController.login(
+        this.username,
+        this.password,
+      );
 
-      // if (response?.status === 200) {
-      //   localStorage.setItem(LS.AccessToken, response.data.accessToken);
-      //   localStorage.setItem(LS.AdminId, response.data.adminId);
-      //
-      //   // Go to profile if login is successful
-      //   this.$router.push({ name: "admin-profile" });
-      //   return;
-      // }
+      if (ControllerBase.isSuccess(response?.status)) {
+        localStorage.setItem(LS.AccessToken, response.data.accessToken);
+        localStorage.setItem(LS.AdminId, response.data.adminId);
+        this.$adminController.setToken(response.data.accessToken);
 
-      this.username = ''
-      this.password = ''
-
-      // if (response?.status === 401) {
-      if (this.username === '') {
-        this.appendAlert('Incorrect credentials!', 'danger')
-        // return;
+        // Go to profile if login is successful
+        await this.$router.push('/profile');
+        return;
       }
 
-      // this.appendAlert(
-      //   "Something went really wrong... Exit this page forever",
-      //   "danger"
-      // );
+      this.username = '';
+      this.password = '';
+
+      if (response?.status === HttpStatusCode.Unauthorized) {
+        this.$alert('Incorrect credentials!', 'warning');
+        return;
+      }
+
+      this.$alert('Something went wrong... Real shit is happening', 'danger');
     },
   },
-})
+});
 </script>
 
 <template>
-  <div class="container">
-    <div class="top">
-      <div id="liveErrorAlert"></div>
-      <div
-        v-if="expired"
-        class="alert alert-danger alert-dismissible fade show notification"
-        role="alert"
-      >
-        Your <strong>15 minutes</strong> session was expired!
+  <div id="app" class="container">
+    <b-container>
+      <div class="top">
+        <div id="alertContainer"></div>
+
+        <div class="head">
+          <img alt="fut" class="ico" src="@/static/icon.png" />
+          <h1 class="title">PetID Management</h1>
+        </div>
+      </div>
+
+      <form class="log-form">
+        <div class="mb-xl-4">
+          <label class="form-label" for="usernameInput">Username</label>
+          <input
+            id="usernameInput"
+            v-model="username"
+            aria-describedby="username"
+            class="form-control bg-dark text-light"
+            type="text"
+          />
+        </div>
+        <div class="mb-xl-4">
+          <label class="form-label" for="passwordInput">Password</label>
+          <input
+            id="passwordInput"
+            v-model="password"
+            class="form-control bg-dark text-light"
+            type="password"
+          />
+        </div>
         <button
+          class="btn btn-primary login-btn mb-xl-4"
           type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
-
-      <div class="head">
-        <img class="ico" src="@/static/icon.png" alt="fut" />
-        <h1 class="title">PetID Management</h1>
-      </div>
-    </div>
-
-    <form class="log-form">
-      <div class="mb-xl-4">
-        <label for="usernameInput" class="form-label">Username</label>
-        <input
-          id="usernameInput"
-          v-model="username"
-          type="text"
-          class="form-control"
-          aria-describedby="username"
-        />
-      </div>
-      <div class="mb-xl-4">
-        <label for="passwordInput" class="form-label">Password</label>
-        <input
-          id="passwordInput"
-          v-model="password"
-          type="password"
-          class="form-control"
-        />
-      </div>
-      <button type="button" class="btn btn-primary login-btn" @click="login">
-        Login
-      </button>
-    </form>
+          @click="login"
+        >
+          Login
+        </button>
+      </form>
+    </b-container>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .container {
   margin-top: 2vh;
 }
@@ -122,11 +110,6 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.notification {
-  width: 60vw !important;
-  font-size: 20px;
 }
 
 .warning-svg {
@@ -165,10 +148,21 @@ export default Vue.extend({
   margin-top: 10vh;
   margin-left: 15vw;
   margin-right: 15vw;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  div {
+    width: 40vw;
+  }
+
+  button {
+    width: 30vw;
+  }
 }
 
 .login-btn {
   font-size: 24px;
-  width: 10vw;
 }
 </style>
