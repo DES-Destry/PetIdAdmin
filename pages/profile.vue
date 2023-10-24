@@ -37,7 +37,9 @@ export default Vue.extend({
         deletionTime.setMinutes(this.createdAt.getMinutes());
         deletionTime.setHours(this.createdAt.getHours());
 
-        return `Time of account auto-deletion: ${deletionTime.toLocaleString('en-US')}`;
+        return `Time of account auto-deletion: ${deletionTime.toLocaleString(
+          'en-US',
+        )}`;
       }
 
       return '';
@@ -111,20 +113,20 @@ export default Vue.extend({
 
       this.passwordEditErrorText = '';
     },
-    saveNewPassword() {
-      this.$alert('Password have changed successfully!', 'success');
-      // const changePasswordResponse = await AdminController.changePassword(
-      //   this.oldPassword,
-      //   this.newPassword
-      // );
-      //
-      // if (changePasswordResponse?.status === 200) {
-      //   this.$alert("Password have changed successfully!", "success");
-      // } else if (changePasswordResponse?.status === 403) {
-      //   this.$alert("Old password is not correct!", "warning");
-      // } else {
-      //   this.$alert("Something went wrong...", "danger");
-      // }
+    async saveNewPassword() {
+      const changePasswordResponse = await this.$adminController.changePassword(
+        this.oldPassword,
+        this.newPassword,
+      );
+
+      if (changePasswordResponse?.status === 200) {
+        this.$alert('Password have changed successfully!', 'success');
+        this.passwordLastChangedAt = new Date();
+      } else if (changePasswordResponse?.status === 401) {
+        this.$alert('Old password is not correct!', 'warning');
+      } else {
+        this.$alert('Something went wrong...', 'danger');
+      }
     },
   },
 });
@@ -139,7 +141,7 @@ export default Vue.extend({
       <h1 class="username">{{ username }}</h1>
 
       <div class="line"></div>
-      <hr/>
+      <hr />
 
       <p class="password">{{ passwordInfo }}</p>
       <p class="account-deletion">{{ accountDeletionInfo }}</p>
@@ -217,25 +219,25 @@ export default Vue.extend({
       </b-modal>
     </div>
 
-<!--    <div class="controls">-->
-      <!--      <OptionNavigator-->
-      <!--        class="control-item"-->
-      <!--        title="Find user"-->
-      <!--        page="user-search"-->
-      <!--      />-->
-      <!--      <OptionNavigator-->
-      <!--        class="control-item"-->
-      <!--        v-if="isSuperAdmin"-->
-      <!--        title="Find admin"-->
-      <!--        page="user-search"-->
-      <!--      />-->
-      <!--      <OptionNavigator-->
-      <!--        class="control-item"-->
-      <!--        v-if="isSuperAdmin"-->
-      <!--        title="FutuructaTrail"-->
-      <!--        page="trail"-->
-      <!--      />-->
-<!--    </div>-->
+    <!--    <div class="controls">-->
+    <!--      <OptionNavigator-->
+    <!--        class="control-item"-->
+    <!--        title="Find user"-->
+    <!--        page="user-search"-->
+    <!--      />-->
+    <!--      <OptionNavigator-->
+    <!--        class="control-item"-->
+    <!--        v-if="isSuperAdmin"-->
+    <!--        title="Find admin"-->
+    <!--        page="user-search"-->
+    <!--      />-->
+    <!--      <OptionNavigator-->
+    <!--        class="control-item"-->
+    <!--        v-if="isSuperAdmin"-->
+    <!--        title="FutuructaTrail"-->
+    <!--        page="trail"-->
+    <!--      />-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -266,7 +268,8 @@ export default Vue.extend({
   text-align: center;
 }
 
-.password, .account-deletion {
+.password,
+.account-deletion {
   font-size: 28px;
   text-align: center;
 }
