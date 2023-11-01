@@ -2,7 +2,6 @@
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 export default Vue.extend({
-  // components: { OptionNavigator },
   data() {
     return {
       username: 'Loading...',
@@ -219,25 +218,13 @@ export default Vue.extend({
       </b-modal>
     </div>
 
-    <!--    <div class="controls">-->
-    <!--      <OptionNavigator-->
-    <!--        class="control-item"-->
-    <!--        title="Find user"-->
-    <!--        page="user-search"-->
-    <!--      />-->
-    <!--      <OptionNavigator-->
-    <!--        class="control-item"-->
-    <!--        v-if="isSuperAdmin"-->
-    <!--        title="Find admin"-->
-    <!--        page="user-search"-->
-    <!--      />-->
-    <!--      <OptionNavigator-->
-    <!--        class="control-item"-->
-    <!--        v-if="isSuperAdmin"-->
-    <!--        title="FutuructaTrail"-->
-    <!--        page="trail"-->
-    <!--      />-->
-    <!--    </div>-->
+    <div class="controls">
+      <OptionNavigator
+        class="control-item"
+        title="Tag explorer"
+        page="tags"
+      />
+    </div>
   </div>
 </template>
 
@@ -281,6 +268,7 @@ export default Vue.extend({
 }
 
 .edit-password-button {
+  margin-top: -30px;
   font-size: 28px;
   width: 40vw;
 }
@@ -290,7 +278,7 @@ export default Vue.extend({
   flex-direction: column;
   align-items: stretch;
 
-  background: #bbb;
+  background: #696969;
   border-radius: 15px;
   width: 50vw;
   margin-top: 50px;
@@ -298,9 +286,11 @@ export default Vue.extend({
   padding: 20px;
 
   .control-item {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     margin-top: 10px;
   }
+
+  margin-bottom: 30px;
 }
 
 .password-input {
