@@ -1,35 +1,31 @@
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-    name: 'OptionNavigator',
-    props: {
-      title: {
-        type: String,
-        default: "",
-      },
-      page: {
-        type: String,
-        default: "",
-      },
+  name: 'OptionNavigator',
+  props: {
+    title: {
+      type: String,
+      default: '',
     },
-    methods: {
-      navigate() {
-        this.$router.push({ name: this.page });
-      },
+    page: {
+      type: String,
+      default: '',
     },
-  });
+  },
+  methods: {
+    navigate() {
+      this.$router.push({ name: this.page });
+    },
+  },
+});
 </script>
 
 <template>
   <div class="main-nav">
     <h2 class="title">{{ title }}</h2>
     <hr />
-    <button
-      type="button"
-      class="btn btn-success navigate"
-      @click="navigate"
-    >
+    <button type="button" class="btn btn-success navigate" @click="navigate">
       <b-icon icon="arrow-right-circle"></b-icon>
     </button>
   </div>
