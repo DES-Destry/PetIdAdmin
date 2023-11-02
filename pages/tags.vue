@@ -21,8 +21,7 @@ export default Vue.extend({
       <div class="search">
         <b-form inline>
           <label class="sr-only" for="inline-form-input-search-text"
-            >Search</label
-          >
+            >Search</label>
           <b-form-input
             id="inline-form-input-search-text"
             v-model="searchString"
@@ -31,8 +30,7 @@ export default Vue.extend({
           ></b-form-input>
 
           <label class="sr-only" for="inline-form-input-search-by"
-            >Search By</label
-          >
+            >Search By</label>
           <b-form-select
             id="inline-form-input-search-by"
             :options="['ID', 'Public QR']"
@@ -92,6 +90,8 @@ export default Vue.extend({
   div {
     margin: 100px;
   }
+  // footer height (140px) + 50px
+  margin-bottom: 190px;
 }
 
 footer {
