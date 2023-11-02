@@ -6,7 +6,7 @@ export default Vue.extend({
     return {
       tags: [],
       searchString: '',
-      searchBy: '',
+      searchBy: 'ID is...',
     };
   },
 });
@@ -19,28 +19,25 @@ export default Vue.extend({
       <h1 class="page-title">Tags</h1>
 
       <div class="search">
-        <b-form inline>
-          <label class="sr-only" for="inline-form-input-search-text"
-            >Search</label>
-          <b-form-input
-            id="inline-form-input-search-text"
-            v-model="searchString"
-            class="mb-2 mr-sm-2 mb-sm-0"
-            placeholder="Search..."
-          ></b-form-input>
+        <label class="sr-only" for="inline-form-input-search-by"
+        >Search By</label>
+        <b-form-select
+          id="inline-form-input-search-by"
+          :options="['ID is...', 'Public QR is...']"
+          :value="searchBy"
+          class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light search-by"
+          placeholder="Search..."></b-form-select>
 
-          <label class="sr-only" for="inline-form-input-search-by"
-            >Search By</label>
-          <b-form-select
-            id="inline-form-input-search-by"
-            :options="['ID', 'Public QR']"
-            :value="searchBy"
-            class="mb-2 mr-sm-2 mb-sm-0"
-            placeholder="Search..."
-          ></b-form-select>
+        <label class="sr-only" for="inline-form-input-search-text">Search</label>
+        <b-form-input
+          id="inline-form-input-search-text"
+          v-model="searchString"
+          class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light search-text"
+          placeholder="Search..."></b-form-input>
 
-          <b-button variant="primary">Search</b-button>
-        </b-form>
+        <b-button variant="primary">
+          <b-icon icon="search"></b-icon>
+        </b-button>
       </div>
       <div class="tag-list">
         <div>Element 1</div>
@@ -84,6 +81,16 @@ export default Vue.extend({
 .page-title {
   font-weight: bolder;
   font-size: 72px;
+}
+
+.search {
+  margin-top: 30px;
+  display: flex;
+  width: 50vw;
+
+  .search-by {
+    width: 20%;
+  }
 }
 
 .tag-list {
