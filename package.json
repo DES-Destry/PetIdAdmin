@@ -30,7 +30,7 @@
     "core-js": "^3.25.3",
     "dompurify": "^3.0.6",
     "nuxt": "^2.15.8",
-    "vue": "^2.7.10",
+    "vue": "^3.3.8",
     "vue-class-component": "^7.2.6",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10"
