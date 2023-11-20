@@ -32,7 +32,7 @@
     "nuxt": "^2.15.8",
     "vue": "^2.7.10",
     "vue-class-component": "^7.2.6",
-    "vue-server-renderer": "^2.7.10",
+    "vue-server-renderer": "^2.7.15",
     "vue-template-compiler": "^2.7.10"
   },
   "devDependencies": {
