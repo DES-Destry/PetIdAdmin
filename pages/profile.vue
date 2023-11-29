@@ -264,7 +264,6 @@ export default Vue.extend({
 }
 
 .edit-password-button {
-  margin-top: -30px;
   font-size: 28px;
   width: 40vw;
 }
