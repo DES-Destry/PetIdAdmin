@@ -7,6 +7,16 @@ export default Vue.extend({
       tags: [],
       searchString: '',
       searchBy: 'ID is...',
+
+      virginFilterOptions: [
+        { text: 'Show all', value: { showVirgin: true, showNotVirgin: true } },
+        { text: 'Show only virgin', value: { showVirgin: true, showNotVirgin: false } },
+        { text: 'Show only not virgin', value: { showVirgin: false, showNotVirgin: true } }
+      ],
+      virginFilter: {
+        showVirgin: true,
+        showNotVirgin: true,
+      },
     };
   },
 });
@@ -19,21 +29,20 @@ export default Vue.extend({
       <h1 class="page-title">Tags</h1>
 
       <div class="search">
-        <label class="sr-only" for="inline-form-input-search-by"
-        >Search By</label>
-        <b-form-select
-          id="inline-form-input-search-by"
-          :options="['ID is...', 'Public QR is...']"
-          :value="searchBy"
-          class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light search-by"
-          placeholder="Search..."></b-form-select>
-
         <label class="sr-only" for="inline-form-input-search-text">Search</label>
         <b-form-input
           id="inline-form-input-search-text"
           v-model="searchString"
+          type="number"
           class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light search-text"
-          placeholder="Search..."></b-form-input>
+          placeholder="ID"></b-form-input>
+
+        <b-form-select
+          id="inline-form-input-virgin-filter"
+          :options="virginFilterOptions"
+          :value="virginFilter"
+          class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light virgin-filter"
+          placeholder="Virgin filter"></b-form-select>
 
         <b-button variant="primary">
           <b-icon icon="search"></b-icon>
@@ -87,10 +96,6 @@ export default Vue.extend({
   margin-top: 30px;
   display: flex;
   width: 50vw;
-
-  .search-by {
-    width: 20%;
-  }
 }
 
 .tag-list {
