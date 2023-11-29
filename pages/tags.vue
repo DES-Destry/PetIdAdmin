@@ -1,23 +1,55 @@
 <script lang="ts">
 import Vue from 'vue';
+import LS from '~/store/constants/LS';
+import { TagReviewDto } from '~/api/dto/tag.dto';
 
 export default Vue.extend({
   data() {
     return {
-      tags: [],
+      tags: [] as TagReviewDto[],
       searchString: '',
-      searchBy: 'ID is...',
 
       virginFilterOptions: [
         { text: 'Show all', value: { showVirgin: true, showNotVirgin: true } },
-        { text: 'Show only virgin', value: { showVirgin: true, showNotVirgin: false } },
-        { text: 'Show only not virgin', value: { showVirgin: false, showNotVirgin: true } }
+        {
+          text: 'Show only virgin',
+          value: { showVirgin: true, showNotVirgin: false },
+        },
+        {
+          text: 'Show only not virgin',
+          value: { showVirgin: false, showNotVirgin: true },
+        },
       ],
       virginFilter: {
         showVirgin: true,
         showNotVirgin: true,
       },
     };
+  },
+  async mounted() {
+    const tagsResponse = await this.$adminController.getAllTags();
+
+    if (!tagsResponse) {
+      this.$alert('Something went wrong... Real shit is happening', 'danger');
+      return;
+    }
+
+    if (tagsResponse.status === 401) {
+      LS.deleteAuthData();
+      await this.$router.push('/login?expired=true');
+
+      return;
+    }
+
+    if (tagsResponse.status !== 200) {
+      this.$alert(
+        `Something went wrong... Real shit is happening (Status ${tagsResponse.status})`,
+        'danger',
+      );
+      return;
+    }
+
+    this.tags = tagsResponse.data.tags;
   },
 });
 </script>
@@ -29,20 +61,24 @@ export default Vue.extend({
       <h1 class="page-title">Tags</h1>
 
       <div class="search">
-        <label class="sr-only" for="inline-form-input-search-text">Search</label>
+        <label class="sr-only" for="inline-form-input-search-text"
+          >Search</label
+        >
         <b-form-input
           id="inline-form-input-search-text"
           v-model="searchString"
           type="number"
           class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light search-text"
-          placeholder="ID"></b-form-input>
+          placeholder="ID"
+        ></b-form-input>
 
         <b-form-select
           id="inline-form-input-virgin-filter"
           :options="virginFilterOptions"
           :value="virginFilter"
           class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light virgin-filter"
-          placeholder="Virgin filter"></b-form-select>
+          placeholder="Virgin filter"
+        ></b-form-select>
 
         <b-button variant="primary">
           <b-icon icon="search"></b-icon>
