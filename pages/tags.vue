@@ -2,8 +2,10 @@
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 import { TagReviewDto } from '~/api/dto/tag.dto';
+import TagCard from "~/components/tag.vue";
 
 export default Vue.extend({
+  components: {TagCard},
   data() {
     return {
       tags: [] as TagReviewDto[],
@@ -85,16 +87,7 @@ export default Vue.extend({
         </b-button>
       </div>
       <div class="tag-list">
-        <div>Element 1</div>
-        <div>Element 2</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
-        <div>Element 3</div>
+        <tag-card v-for="tag of tags" :id="tag.id" :key="tag.id" :is-already-in-use="tag.isAlreadyInUse" :created-at="tag.createdAt.toString()"/>
       </div>
       <footer class="create">
         <b-button class="create-button" variant="success">
@@ -135,11 +128,20 @@ export default Vue.extend({
 }
 
 .tag-list {
-  div {
-    margin: 100px;
-  }
   // footer height (140px) + 50px
   margin-bottom: 190px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 50vw;
+
+  margin-top: 50px;
+
+  * {
+    margin: 15px;
+  }
 }
 
 footer {
