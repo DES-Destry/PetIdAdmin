@@ -63,10 +63,11 @@ import LS from '~/store/constants/LS';
 
       if (qrFrame) {
         qrFrame.innerHTML = '';
+        console.log(this);
 
         QrCreator.render(
           {
-            text: this.controlCode,
+            text: this.controlCode.toString(),
             radius: 0.4,
             ecLevel: 'H',
             fill: '#000',
