@@ -56,8 +56,6 @@ import LS from '~/store/constants/LS';
           },
           qrFrame,
         );
-
-        this.isMainQrRendered = true;
       }
     },
     renderControlQr() {
@@ -77,8 +75,6 @@ import LS from '~/store/constants/LS';
           },
           qrFrame,
         );
-
-        this.isControlQrRendered = true;
       }
     },
     async copyMainQr() {
