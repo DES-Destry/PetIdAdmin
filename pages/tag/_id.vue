@@ -1,7 +1,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import LS from "~/store/constants/LS";
+import QrCreator from 'qr-creator';
+import LS from '~/store/constants/LS';
 
 @Component({
   data() {
@@ -17,25 +18,64 @@ import LS from "~/store/constants/LS";
   },
   computed: {
     iconName() {
-      return this.isAlreadyInUse ? require('@/static/images/tag_in_use.png') : require('@/static/images/tag_not_in_use.png');
+      return this.isAlreadyInUse
+        ? require('@/static/images/tag_in_use.png')
+        : require('@/static/images/tag_not_in_use.png');
     },
     inUseSymbol() {
-      return this.isAlreadyInUse ? "🟢" : "⚪";
+      return this.isAlreadyInUse ? '🟢' : '⚪';
     },
     formattedCreatedAt() {
-      if (!this.createdAt) return "loading...";
-
+      if (!this.createdAt) return 'loading...';
       return new Date(this.createdAt).toLocaleDateString('en-US');
     },
     formattedPetAddedAt() {
-      if (!this.petAddedAt) return "not added yet";
-
+      if (!this.petAddedAt) return 'not added yet';
       return new Date(this.petAddedAt).toLocaleDateString('en-US');
     },
     formattedLastScannedAt() {
-      if (!this.lastScannedAt) return "not scanned yet";
-
+      if (!this.lastScannedAt) return 'not scanned yet';
       return new Date(this.lastScannedAt).toLocaleDateString('en-US');
+    },
+  },
+  methods: {
+    renderMainQr() {
+      const qrFrame = document.querySelector('#mainQr');
+
+      if (qrFrame) {
+        qrFrame.innerHTML = '';
+
+        QrCreator.render(
+          {
+            text: `${process.env.FRONTEND_BASE_API}/pet/${this.publicCode}`,
+            radius: 0.4,
+            ecLevel: 'H',
+            fill: '#000',
+            background: null,
+            size: 512,
+          },
+          qrFrame,
+        );
+      }
+    },
+    renderControlQr() {
+      const qrFrame = document.querySelector('#controlQr');
+
+      if (qrFrame) {
+        qrFrame.innerHTML = '';
+
+        QrCreator.render(
+          {
+            text: this.controlCode,
+            radius: 0.4,
+            ecLevel: 'H',
+            fill: '#000',
+            background: null,
+            size: 512,
+          },
+          qrFrame,
+        );
+      }
     },
   },
   async mounted() {
@@ -67,7 +107,7 @@ import LS from "~/store/constants/LS";
     this.createdAt = tagResponse.data.createdAt;
     this.petAddedAt = tagResponse.data.petAddedAt;
     this.lastScannedAt = tagResponse.data.lastScannedAt;
-  }
+  },
 })
 export default class _id extends Vue {}
 </script>
@@ -77,23 +117,61 @@ export default class _id extends Vue {}
     <div id="alertContainer"></div>
 
     <div class="head">
-      <img class="icon" :src="iconName" alt=""/>
-      <h1 class="id">#{{id}}</h1>
+      <img :src="iconName" alt="" class="icon" />
+      <h1 class="id">#{{ id }}</h1>
     </div>
 
     <div class="content">
-      <b-button variant="primary" class="generate"> <b-icon icon="plus-square-dotted"></b-icon> Generate tag qr code</b-button>
-      <b-button variant="primary" class="generate"> <b-icon icon="plus-square-dotted"></b-icon> Generate control qr code</b-button>
+      <b-button
+        v-b-modal.mainQrModal
+        class="generate"
+        variant="primary"
+        @click="renderMainQr"
+      >
+        <b-icon icon="plus-square-dotted"></b-icon>
+        Generate tag QR code
+      </b-button>
+      <b-button class="generate" variant="primary">
+        <b-icon icon="plus-square-dotted"></b-icon>
+        Generate control QR code
+      </b-button>
 
       <p>Is already in use: {{ inUseSymbol }}</p>
       <p>Created at: {{ formattedCreatedAt }}</p>
       <p>Pet added at: {{ formattedPetAddedAt }}</p>
       <p>Last scanned at: {{ formattedLastScannedAt }}</p>
     </div>
+
+    <b-modal
+      id="mainQrModal"
+      body-bg-variant="light"
+      body-text-variant="dark"
+      centered
+      class="modal fade qr-modal"
+      footer-bg-variant="dark"
+      footer-text-variant="light"
+      header-bg-variant="primary"
+      header-text-variant="light"
+      size="xl"
+      title="Main QR Code"
+    >
+      <section id="mainQr">
+        Click to the "Rerender" button to see a QR code!
+      </section>
+
+      <template #modal-footer="{ ok, cancel }">
+        <b-button variant="primary" @click="cancel()"> Save as png</b-button>
+        <b-button variant="primary" @click="cancel()">
+          Copy in clipboard
+        </b-button>
+        <b-button variant="primary" @click="renderMainQr">Rerender</b-button>
+        <b-button variant="primary" @click="ok()">Ok</b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .tag-page {
   margin-top: 13vh;
   display: flex;
@@ -132,5 +210,16 @@ export default class _id extends Vue {}
   margin-bottom: 15px;
   font-size: 25px;
   width: 50vw;
+}
+
+.qr-modal {
+  display: flex;
+  align-items: center;
+}
+
+#mainQr,
+#controlQr {
+  font-size: 20px;
+  text-align: center;
 }
 </style>
