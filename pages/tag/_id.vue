@@ -14,10 +14,17 @@ import LS from '~/store/constants/LS';
       createdAt: undefined,
       petAddedAt: undefined,
       lastScannedAt: undefined,
+
+      isNotFound: true,
     };
   },
   computed: {
+    idString() {
+      return this.isNotFound ? 'Not found' : `#${this.id}`;
+    },
     iconName() {
+      if (this.isNotFound) return require('@/static/images/not_found.png');
+
       return this.isAlreadyInUse
         ? require('@/static/images/tag_in_use.png')
         : require('@/static/images/tag_not_in_use.png');
@@ -208,6 +215,10 @@ import LS from '~/store/constants/LS';
       return;
     }
 
+    if (tagResponse.status === 404) {
+      return;
+    }
+
     if (tagResponse.status !== 200) {
       this.$alert(
         `Something went wrong... Real shit is happening (Status ${tagResponse.status})`,
@@ -216,6 +227,7 @@ import LS from '~/store/constants/LS';
       return;
     }
 
+    this.isNotFound = false;
     this.publicCode = tagResponse.data.publicCode;
     this.controlCode = tagResponse.data.controlCode;
     this.isAlreadyInUse = tagResponse.data.isAlreadyInUse;
@@ -233,10 +245,10 @@ export default class _id extends Vue {}
 
     <div class="head">
       <img :src="iconName" alt="" class="icon" />
-      <h1 class="id">#{{ id }}</h1>
+      <h1 class="id">{{ idString }}</h1>
     </div>
 
-    <div class="content">
+    <div v-if="!isNotFound" class="content">
       <b-button v-b-modal.mainQrModal class="generate" variant="primary">
         <b-icon icon="plus-square-dotted"></b-icon>
         Generate tag QR code
