@@ -96,7 +96,27 @@ import LS from '~/store/constants/LS';
       a.download = `main-qr-${this.id}.png`;
       a.click();
     },
-    downloadControlQr() {},
+    downloadControlQr() {
+      const canvas = document.querySelector(
+        '#controlQr canvas',
+      ) as HTMLCanvasElement;
+
+      if (!canvas) {
+        this.$alert(
+          'Render QR code first!',
+          'danger',
+          'controlQrAlertContainer',
+        );
+        return;
+      }
+
+      const dataURL = canvas.toDataURL('image/png');
+
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = `control-qr-${this.id}.png`;
+      a.click();
+    },
   },
   async mounted() {
     const tagResponse = await this.$adminController.getTagById(this.id);
