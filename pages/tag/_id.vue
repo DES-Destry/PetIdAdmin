@@ -197,16 +197,11 @@ export default class _id extends Vue {}
     </div>
 
     <div class="content">
-      <b-button
-        v-b-modal.mainQrModal
-        class="generate"
-        variant="primary"
-        @click="renderMainQr"
-      >
+      <b-button v-b-modal.mainQrModal class="generate" variant="primary">
         <b-icon icon="plus-square-dotted"></b-icon>
         Generate tag QR code
       </b-button>
-      <b-button class="generate" variant="primary">
+      <b-button v-b-modal.controlQrModal class="generate" variant="primary">
         <b-icon icon="plus-square-dotted"></b-icon>
         Generate control QR code
       </b-button>
@@ -252,6 +247,51 @@ export default class _id extends Vue {}
           Save as png
         </b-button>
         <b-button variant="primary" @click="copyMainQr">
+          <b-icon icon="clipboard-plus"></b-icon>
+          Copy in clipboard
+        </b-button>
+        <b-button variant="primary" @click="ok()">
+          <b-icon icon="check-all"></b-icon>
+          Ok
+        </b-button>
+      </template>
+    </b-modal>
+
+    <b-modal
+      id="controlQrModal"
+      body-bg-variant="light"
+      body-text-variant="dark"
+      centered
+      class="modal fade qr-modal"
+      footer-bg-variant="dark"
+      footer-text-variant="light"
+      header-bg-variant="primary"
+      header-text-variant="light"
+      size="xl"
+      title="Control QR Code"
+    >
+      <div class="qr-modal-content">
+        <div id="controlQrAlertContainer"></div>
+
+        <section id="controlQr">
+          Click on the "Render" button to see a QR code!
+          <b-button
+            class="render-button"
+            variant="success"
+            @click="renderControlQr"
+          >
+            <b-icon icon="image-fill"></b-icon>
+            Render
+          </b-button>
+        </section>
+      </div>
+
+      <template #modal-footer="{ ok }">
+        <b-button variant="primary" @click="downloadControlQr">
+          <b-icon icon="download"></b-icon>
+          Save as png
+        </b-button>
+        <b-button variant="primary" @click="copyControlQr">
           <b-icon icon="clipboard-plus"></b-icon>
           Copy in clipboard
         </b-button>
