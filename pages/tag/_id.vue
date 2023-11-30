@@ -113,7 +113,46 @@ import LS from '~/store/constants/LS';
         this.$alert(err.message, 'danger', 'mainQrAlertContainer');
       }
     },
-    copyControlQr() {},
+    async copyControlQr() {
+      const canvas = document.querySelector(
+        '#controlQr canvas',
+      ) as HTMLCanvasElement;
+
+      if (!canvas) {
+        this.$alert(
+          'Render QR code first!',
+          'danger',
+          'controlQrAlertContainer',
+        );
+        return;
+      }
+
+      const format = 'image/png';
+
+      try {
+        const blob = await new Promise<Blob | null>((resolve) =>
+          canvas.toBlob((b) => resolve(b), format),
+        );
+
+        if (blob) {
+          const clipboardItem = new ClipboardItem(
+            { [format]: blob },
+            { presentationStyle: 'attachment' },
+          );
+
+          await navigator.clipboard.write([clipboardItem]);
+          this.$alert(
+            'QR Copied to your clipboard',
+            'success',
+            'controlQrAlertContainer',
+          );
+        } else {
+          this.$alert('Null image error', 'danger', 'controlQrAlertContainer');
+        }
+      } catch (err: any) {
+        this.$alert(err.message, 'danger', 'controlQrAlertContainer');
+      }
+    },
     downloadMainQr() {
       const canvas = document.querySelector(
         '#mainQr canvas',
