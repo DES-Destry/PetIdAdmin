@@ -1,6 +1,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import LS from "~/store/constants/LS";
 
 @Component({
   data() {
@@ -36,6 +37,36 @@ import Component from 'vue-class-component';
 
       return new Date(this.lastScannedAt).toLocaleDateString('en-US');
     },
+  },
+  async mounted() {
+    const tagResponse = await this.$adminController.getTagById(this.id);
+
+    if (!tagResponse) {
+      this.$alert('Something went wrong... Real shit is happening', 'danger');
+      return;
+    }
+
+    if (tagResponse.status === 401) {
+      LS.deleteAuthData();
+      await this.$router.push('/login?expired=true');
+
+      return;
+    }
+
+    if (tagResponse.status !== 200) {
+      this.$alert(
+        `Something went wrong... Real shit is happening (Status ${tagResponse.status})`,
+        'danger',
+      );
+      return;
+    }
+
+    this.publicCode = tagResponse.data.publicCode;
+    this.controlCode = tagResponse.data.controlCode;
+    this.isAlreadyInUse = tagResponse.data.isAlreadyInUse;
+    this.createdAt = tagResponse.data.createdAt;
+    this.petAddedAt = tagResponse.data.petAddedAt;
+    this.lastScannedAt = tagResponse.data.lastScannedAt;
   }
 })
 export default class _id extends Vue {}
