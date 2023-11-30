@@ -40,7 +40,7 @@ import LS from '~/store/constants/LS';
   },
   methods: {
     renderMainQr() {
-      const qrFrame = document.querySelector('#mainQr');
+      const qrFrame = document.getElementById('mainQr');
 
       if (qrFrame) {
         qrFrame.innerHTML = '';
@@ -59,7 +59,7 @@ import LS from '~/store/constants/LS';
       }
     },
     renderControlQr() {
-      const qrFrame = document.querySelector('#controlQr');
+      const qrFrame = document.getElementById('controlQr');
 
       if (qrFrame) {
         qrFrame.innerHTML = '';
@@ -77,6 +77,21 @@ import LS from '~/store/constants/LS';
         );
       }
     },
+    copyMainQr() {},
+    copyControlQr() {},
+    downloadMainQr() {
+      const canvas = document.querySelector(
+        '#mainQr canvas',
+      ) as HTMLCanvasElement;
+
+      const dataURL = canvas.toDataURL('image/png');
+
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = `main-qr-${this.id}.png`;
+      a.click();
+    },
+    downloadControlQr() {},
   },
   async mounted() {
     const tagResponse = await this.$adminController.getTagById(this.id);
@@ -160,7 +175,7 @@ export default class _id extends Vue {}
       </section>
 
       <template #modal-footer="{ ok, cancel }">
-        <b-button variant="primary" @click="cancel()">
+        <b-button variant="primary" @click="downloadMainQr">
           <b-icon icon="download"></b-icon>
           Save as png
         </b-button>
