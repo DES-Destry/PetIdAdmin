@@ -160,12 +160,22 @@ export default class _id extends Vue {}
       </section>
 
       <template #modal-footer="{ ok, cancel }">
-        <b-button variant="primary" @click="cancel()"> Save as png</b-button>
         <b-button variant="primary" @click="cancel()">
+          <b-icon icon="download"></b-icon>
+          Save as png
+        </b-button>
+        <b-button variant="primary" @click="cancel()">
+          <b-icon icon="clipboard-plus"></b-icon>
           Copy in clipboard
         </b-button>
-        <b-button variant="primary" @click="renderMainQr">Render</b-button>
-        <b-button variant="primary" @click="ok()">Ok</b-button>
+        <b-button variant="primary" @click="renderMainQr">
+          <b-icon icon="image-fill"></b-icon>
+          Render
+        </b-button>
+        <b-button variant="primary" @click="ok()">
+          <b-icon icon="check-all"></b-icon>
+          Ok
+        </b-button>
       </template>
     </b-modal>
   </div>
