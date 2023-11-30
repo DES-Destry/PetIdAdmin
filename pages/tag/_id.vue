@@ -56,6 +56,8 @@ import LS from '~/store/constants/LS';
           },
           qrFrame,
         );
+
+        this.isMainQrRendered = true;
       }
     },
     renderControlQr() {
@@ -75,6 +77,8 @@ import LS from '~/store/constants/LS';
           },
           qrFrame,
         );
+
+        this.isControlQrRendered = true;
       }
     },
     async copyMainQr() {
@@ -112,28 +116,6 @@ import LS from '~/store/constants/LS';
       } catch (err: any) {
         this.$alert(err.message, 'danger', 'mainQrAlertContainer');
       }
-
-      // Google Chrome works fine
-      // canvas.toBlob((blob) => {
-      //   const promisifiedBlob = Promise.resolve(blob ?? 'Null image');
-      //   const clipboardItem = new ClipboardItem(
-      //     { [format]: promisifiedBlob },
-      //     { presentationStyle: 'attachment' },
-      //   );
-      //
-      //   navigator.clipboard
-      //     .write([clipboardItem])
-      //     .then(() => {
-      //       this.$alert(
-      //         'QR Copied to your clipboard',
-      //         'success',
-      //         'mainQrAlertContainer',
-      //       );
-      //     })
-      //     .catch((err) => {
-      //       this.$alert(err.message, 'danger', 'mainQrAlertContainer');
-      //     });
-      // }, format);
     },
     copyControlQr() {},
     downloadMainQr() {
@@ -257,6 +239,14 @@ export default class _id extends Vue {}
 
         <section id="mainQr">
           Click on the "Render" button to see a QR code!
+          <b-button
+            class="render-button"
+            variant="success"
+            @click="renderMainQr"
+          >
+            <b-icon icon="image-fill"></b-icon>
+            Render
+          </b-button>
         </section>
       </div>
 
@@ -268,10 +258,6 @@ export default class _id extends Vue {}
         <b-button variant="primary" @click="copyMainQr">
           <b-icon icon="clipboard-plus"></b-icon>
           Copy in clipboard
-        </b-button>
-        <b-button variant="primary" @click="renderMainQr">
-          <b-icon icon="image-fill"></b-icon>
-          Render
         </b-button>
         <b-button variant="primary" @click="ok()">
           <b-icon icon="check-all"></b-icon>
@@ -332,5 +318,14 @@ export default class _id extends Vue {}
 #mainQr,
 #controlQr {
   font-size: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.render-button {
+  margin-top: 10px;
 }
 </style>
