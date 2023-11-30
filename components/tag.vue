@@ -16,6 +16,11 @@ export default Vue.extend({
       if (!this.createdAt) return "Loading...";
 
       return new Date(this.createdAt).toLocaleDateString('en-US');
+    },
+  },
+  methods: {
+    openTagPage() {
+      this.$router.push(`/tag/${this.id}`);
     }
   }
 });
@@ -28,7 +33,7 @@ export default Vue.extend({
       <p>Is already in use: {{ inUseSymbol }}</p>
       <p>Created at: {{ formattedCreatedAt }}</p>
     </div>
-    <b-button variant="primary"><b-icon icon="eye-fill"></b-icon></b-button>
+    <b-button variant="primary" @click="openTagPage"><b-icon icon="eye-fill"></b-icon></b-button>
   </div>
 </template>
 
