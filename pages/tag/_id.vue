@@ -77,7 +77,64 @@ import LS from '~/store/constants/LS';
         );
       }
     },
-    copyMainQr() {},
+    async copyMainQr() {
+      const canvas = document.querySelector(
+        '#mainQr canvas',
+      ) as HTMLCanvasElement;
+
+      if (!canvas) {
+        this.$alert('Render QR code first!', 'danger', 'mainQrAlertContainer');
+        return;
+      }
+
+      const format = 'image/png';
+
+      try {
+        const blob = await new Promise<Blob | null>((resolve) =>
+          canvas.toBlob((b) => resolve(b), format),
+        );
+
+        if (blob) {
+          const clipboardItem = new ClipboardItem(
+            { [format]: blob },
+            { presentationStyle: 'attachment' },
+          );
+
+          await navigator.clipboard.write([clipboardItem]);
+          this.$alert(
+            'QR Copied to your clipboard',
+            'success',
+            'mainQrAlertContainer',
+          );
+        } else {
+          this.$alert('Null image error', 'danger', 'mainQrAlertContainer');
+        }
+      } catch (err: any) {
+        this.$alert(err.message, 'danger', 'mainQrAlertContainer');
+      }
+
+      // Google Chrome works fine
+      // canvas.toBlob((blob) => {
+      //   const promisifiedBlob = Promise.resolve(blob ?? 'Null image');
+      //   const clipboardItem = new ClipboardItem(
+      //     { [format]: promisifiedBlob },
+      //     { presentationStyle: 'attachment' },
+      //   );
+      //
+      //   navigator.clipboard
+      //     .write([clipboardItem])
+      //     .then(() => {
+      //       this.$alert(
+      //         'QR Copied to your clipboard',
+      //         'success',
+      //         'mainQrAlertContainer',
+      //       );
+      //     })
+      //     .catch((err) => {
+      //       this.$alert(err.message, 'danger', 'mainQrAlertContainer');
+      //     });
+      // }, format);
+    },
     copyControlQr() {},
     downloadMainQr() {
       const canvas = document.querySelector(
@@ -203,12 +260,12 @@ export default class _id extends Vue {}
         </section>
       </div>
 
-      <template #modal-footer="{ ok, cancel }">
+      <template #modal-footer="{ ok }">
         <b-button variant="primary" @click="downloadMainQr">
           <b-icon icon="download"></b-icon>
           Save as png
         </b-button>
-        <b-button variant="primary" @click="cancel()">
+        <b-button variant="primary" @click="copyMainQr">
           <b-icon icon="clipboard-plus"></b-icon>
           Copy in clipboard
         </b-button>
