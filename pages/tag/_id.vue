@@ -84,6 +84,11 @@ import LS from '~/store/constants/LS';
         '#mainQr canvas',
       ) as HTMLCanvasElement;
 
+      if (!canvas) {
+        this.$alert('Render QR code first!', 'danger', 'mainQrAlertContainer');
+        return;
+      }
+
       const dataURL = canvas.toDataURL('image/png');
 
       const a = document.createElement('a');
@@ -170,9 +175,13 @@ export default class _id extends Vue {}
       size="xl"
       title="Main QR Code"
     >
-      <section id="mainQr">
-        Click on the "Render" button to see a QR code!
-      </section>
+      <div class="qr-modal-content">
+        <div id="mainQrAlertContainer"></div>
+
+        <section id="mainQr">
+          Click on the "Render" button to see a QR code!
+        </section>
+      </div>
 
       <template #modal-footer="{ ok, cancel }">
         <b-button variant="primary" @click="downloadMainQr">
@@ -237,14 +246,14 @@ export default class _id extends Vue {}
   width: 50vw;
 }
 
-.qr-modal {
+.qr-modal-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
 #mainQr,
 #controlQr {
   font-size: 20px;
-  text-align: center;
 }
 </style>
