@@ -47,7 +47,7 @@ import LS from '~/store/constants/LS';
 
         QrCreator.render(
           {
-            text: `${process.env.FRONTEND_BASE_API}/pet/${this.publicCode}`,
+            text: `${this.$config.frontendUrl}/pet/${this.publicCode}`,
             radius: 0.4,
             ecLevel: 'H',
             fill: '#000',
@@ -156,7 +156,7 @@ export default class _id extends Vue {}
       title="Main QR Code"
     >
       <section id="mainQr">
-        Click to the "Rerender" button to see a QR code!
+        Click on the "Render" button to see a QR code!
       </section>
 
       <template #modal-footer="{ ok, cancel }">
@@ -164,7 +164,7 @@ export default class _id extends Vue {}
         <b-button variant="primary" @click="cancel()">
           Copy in clipboard
         </b-button>
-        <b-button variant="primary" @click="renderMainQr">Rerender</b-button>
+        <b-button variant="primary" @click="renderMainQr">Render</b-button>
         <b-button variant="primary" @click="ok()">Ok</b-button>
       </template>
     </b-modal>

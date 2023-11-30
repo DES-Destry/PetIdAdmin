@@ -2,10 +2,10 @@
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 import { TagReviewDto } from '~/api/dto/tag.dto';
-import TagCard from "~/components/tag.vue";
+import TagCard from '~/components/tag.vue';
 
 export default Vue.extend({
-  components: {TagCard},
+  components: { TagCard },
   data() {
     return {
       tags: [] as TagReviewDto[],
@@ -87,7 +87,13 @@ export default Vue.extend({
         </b-button>
       </div>
       <div class="tag-list">
-        <tag-card v-for="tag of tags" :id="tag.id" :key="tag.id" :is-already-in-use="tag.isAlreadyInUse" :created-at="tag.createdAt.toString()"/>
+        <tag-card
+          v-for="tag of tags"
+          :id="tag.id"
+          :key="tag.id"
+          :is-already-in-use="tag.isAlreadyInUse"
+          :created-at="tag.createdAt.toString()"
+        />
       </div>
       <footer class="create">
         <b-button class="create-button" variant="success">

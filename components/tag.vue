@@ -10,10 +10,10 @@ export default Vue.extend({
   },
   computed: {
     inUseSymbol() {
-      return this.isAlreadyInUse ? "🟢" : "⚪";
+      return this.isAlreadyInUse ? '🟢' : '⚪';
     },
     formattedCreatedAt() {
-      if (!this.createdAt) return "Loading...";
+      if (!this.createdAt) return 'Loading...';
 
       return new Date(this.createdAt).toLocaleDateString('en-US');
     },
@@ -21,43 +21,45 @@ export default Vue.extend({
   methods: {
     openTagPage() {
       this.$router.push(`/tag/${this.id}`);
-    }
-  }
+    },
+  },
 });
 </script>
 
 <template>
   <div class="tag-card">
-    <h1 class="id">#{{id}}</h1>
+    <h1 class="id">#{{ id }}</h1>
     <div class="info">
       <p>Is already in use: {{ inUseSymbol }}</p>
       <p>Created at: {{ formattedCreatedAt }}</p>
     </div>
-    <b-button variant="primary" @click="openTagPage"><b-icon icon="eye-fill"></b-icon></b-button>
+    <b-button variant="primary" @click="openTagPage"
+      ><b-icon icon="eye-fill"></b-icon
+    ></b-button>
   </div>
 </template>
 
 <style scoped lang="scss">
-  .tag-card {
-    background: #696969;
+.tag-card {
+  background: #696969;
 
-    border: white solid 1px;
-    border-radius: 10px;
-    padding: 10px;
+  border: white solid 1px;
+  border-radius: 10px;
+  padding: 10px;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 20vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 20vw;
+}
+
+.id {
+  font-weight: bolder;
+}
+
+.info {
+  * {
+    margin: 0;
   }
-
-  .id {
-    font-weight: bolder;
-  }
-
-  .info {
-    * {
-      margin: 0;
-    }
-  }
+}
 </style>
