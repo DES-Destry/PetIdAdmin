@@ -1,19 +1,18 @@
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
 import QrCreator from 'qr-creator';
 import LS from '~/store/constants/LS';
 
-@Component({
+export default Vue.extend({
   data() {
     return {
       id: this.$route.params.id,
       publicCode: '',
       controlCode: -1,
       isAlreadyInUse: false,
-      createdAt: undefined,
-      petAddedAt: undefined,
-      lastScannedAt: undefined,
+      createdAt: null,
+      petAddedAt: null,
+      lastScannedAt: null,
 
       isNotFound: true,
     };
@@ -45,6 +44,41 @@ import LS from '~/store/constants/LS';
       return new Date(this.lastScannedAt).toLocaleDateString('en-US');
     },
   },
+  async mounted() {
+    const tagResponse = await this.$adminController.getTagById(this.id);
+
+    if (!tagResponse) {
+      this.$alert('Something went wrong... Real shit is happening', 'danger');
+      return;
+    }
+
+    if (tagResponse.status === 401) {
+      LS.deleteAuthData();
+      await this.$router.push('/login?expired=true');
+
+      return;
+    }
+
+    if (tagResponse.status === 404) {
+      return;
+    }
+
+    if (tagResponse.status !== 200) {
+      this.$alert(
+        `Something went wrong... Real shit is happening (Status ${tagResponse.status})`,
+        'danger',
+      );
+      return;
+    }
+
+    this.isNotFound = false;
+    this.publicCode = tagResponse.data.publicCode;
+    this.controlCode = tagResponse.data.controlCode;
+    this.isAlreadyInUse = tagResponse.data.isAlreadyInUse;
+    this.createdAt = tagResponse.data.createdAt;
+    this.petAddedAt = tagResponse.data.petAddedAt;
+    this.lastScannedAt = tagResponse.data.lastScannedAt;
+  },
   methods: {
     renderMainQr() {
       const qrFrame = document.getElementById('mainQr');
@@ -70,7 +104,6 @@ import LS from '~/store/constants/LS';
 
       if (qrFrame) {
         qrFrame.innerHTML = '';
-        console.log(this);
 
         QrCreator.render(
           {
@@ -200,43 +233,7 @@ import LS from '~/store/constants/LS';
       a.click();
     },
   },
-  async mounted() {
-    const tagResponse = await this.$adminController.getTagById(this.id);
-
-    if (!tagResponse) {
-      this.$alert('Something went wrong... Real shit is happening', 'danger');
-      return;
-    }
-
-    if (tagResponse.status === 401) {
-      LS.deleteAuthData();
-      await this.$router.push('/login?expired=true');
-
-      return;
-    }
-
-    if (tagResponse.status === 404) {
-      return;
-    }
-
-    if (tagResponse.status !== 200) {
-      this.$alert(
-        `Something went wrong... Real shit is happening (Status ${tagResponse.status})`,
-        'danger',
-      );
-      return;
-    }
-
-    this.isNotFound = false;
-    this.publicCode = tagResponse.data.publicCode;
-    this.controlCode = tagResponse.data.controlCode;
-    this.isAlreadyInUse = tagResponse.data.isAlreadyInUse;
-    this.createdAt = tagResponse.data.createdAt;
-    this.petAddedAt = tagResponse.data.petAddedAt;
-    this.lastScannedAt = tagResponse.data.lastScannedAt;
-  },
-})
-export default class _id extends Vue {}
+});
 </script>
 
 <template>
