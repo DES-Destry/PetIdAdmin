@@ -1,6 +1,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
+
 export default Vue.extend({
   data() {
     return {
@@ -158,27 +159,27 @@ export default Vue.extend({
       <!-- Change password Modal -->
       <b-modal
         id="passwordModal"
-        centered
-        class="modal fade"
-        title="Edit password"
-        header-bg-variant="primary"
-        header-text-variant="light"
         body-bg-variant="dark"
         body-text-variant="light"
+        centered
+        class="modal fade"
         footer-bg-variant="dark"
         footer-text-variant="light"
-        @show="resetPasswordModal"
+        header-bg-variant="primary"
+        header-text-variant="light"
+        title="Edit password"
         @cancel="resetPasswordModal"
         @hidden="resetPasswordModal"
         @ok="saveNewPassword"
+        @show="resetPasswordModal"
       >
         <div class="form-floating password-input mb-3">
           <label for="floatingPassword">Old password</label>
           <input
             id="floatingOldPassword"
             v-model="oldPassword"
-            type="password"
             class="form-control bg-dark text-light"
+            type="password"
           />
         </div>
         <div class="form-floating password-input mb-3">
@@ -186,8 +187,8 @@ export default Vue.extend({
           <input
             id="floatingPassword"
             v-model="newPassword"
-            type="password"
             class="form-control bg-dark text-light"
+            type="password"
             @change="passwordEditTextsChanged"
           />
         </div>
@@ -196,8 +197,8 @@ export default Vue.extend({
           <input
             id="floatingRepeatPassword"
             v-model="repeatNewPassword"
-            type="password"
             class="form-control bg-dark text-light"
+            type="password"
             @change="passwordEditTextsChanged"
           />
         </div>
@@ -212,14 +213,14 @@ export default Vue.extend({
             :disabled="!isPasswordSavingAvailable"
             variant="success"
             @click="ok()"
-            >Apply changes</b-button
-          >
+            >Apply changes
+          </b-button>
         </template>
       </b-modal>
     </div>
 
     <div class="controls">
-      <OptionNavigator class="control-item" title="Tag explorer" page="tags" />
+      <OptionNavigator class="control-item" page="tags" title="Tag explorer" />
     </div>
   </div>
 </template>

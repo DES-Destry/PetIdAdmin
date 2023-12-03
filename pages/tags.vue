@@ -1,4 +1,5 @@
 <script lang="ts">
+import { randomBytes } from 'crypto';
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 import { TagReviewDto } from '~/api/dto/tag.dto';
@@ -26,7 +27,21 @@ export default Vue.extend({
         showVirgin: true,
         showNotVirgin: true,
       },
+
+      idFrom: '',
+      idTo: '',
     };
+  },
+  computed: {
+    isTagsCanCreated() {
+      return (
+        typeof +this.idFrom === 'number' &&
+        typeof +this.idTo === 'number' &&
+        this.idFrom !== '' &&
+        this.idTo !== '' &&
+        this.idFrom <= this.idTo
+      );
+    },
   },
   async mounted() {
     const tagsResponse = await this.$adminController.getAllTags();
@@ -53,6 +68,26 @@ export default Vue.extend({
 
     this.tags = tagsResponse.data.tags;
   },
+  methods: {
+    resetCreateTagsModal() {
+      this.idFrom = '';
+      this.idTo = '';
+    },
+    createTags() {
+      const count = this.idTo - this.idFrom + 1;
+      const codes = [];
+
+      for (let i = 0; i < count; i++) {
+        const code = randomBytes(16).toString('hex');
+        codes.push(code);
+      }
+
+      this.$alert(`Tag count: ${count}`, 'success');
+
+      // Encode them with a public key
+      // Send POST request
+    },
+  },
 });
 </script>
 
@@ -63,15 +98,15 @@ export default Vue.extend({
       <h1 class="page-title">Tags</h1>
 
       <div class="search">
-        <label class="sr-only" for="inline-form-input-search-text"
-          >Search</label
-        >
+        <label class="sr-only" for="inline-form-input-search-text">
+          Search
+        </label>
         <b-form-input
           id="inline-form-input-search-text"
           v-model="searchString"
-          type="number"
           class="mb-2 mr-sm-2 mb-sm-0 bg-dark text-light search-text"
           placeholder="ID"
+          type="number"
         ></b-form-input>
 
         <b-form-select
@@ -91,21 +126,69 @@ export default Vue.extend({
           v-for="tag of tags"
           :id="tag.id"
           :key="tag.id"
-          :is-already-in-use="tag.isAlreadyInUse"
           :created-at="tag.createdAt.toString()"
+          :is-already-in-use="tag.isAlreadyInUse"
         />
       </div>
       <footer class="create">
-        <b-button class="create-button" variant="success">
+        <b-button
+          v-b-modal.createTagsModal
+          class="create-button"
+          variant="success"
+        >
           Create new
           <b-icon class="create-icon" icon="plus-circle"></b-icon>
         </b-button>
       </footer>
+
+      <!-- Change password Modal -->
+      <b-modal
+        id="createTagsModal"
+        body-bg-variant="dark"
+        body-text-variant="light"
+        centered
+        class="modal fade"
+        footer-bg-variant="dark"
+        footer-text-variant="light"
+        header-bg-variant="primary"
+        header-text-variant="light"
+        title="Create new tags"
+        @cancel="resetCreateTagsModal"
+      >
+        <div class="form-floating number-input mb-3">
+          <label for="floatingIdPassword">ID From</label>
+          <input
+            id="floatingIdPassword"
+            v-model="idFrom"
+            class="form-control bg-dark text-light"
+            type="number"
+          />
+        </div>
+        <div class="form-floating number-input mb-3">
+          <label for="floatingIdTo">ID To</label>
+          <input
+            id="floatingIdTo"
+            v-model="idTo"
+            class="form-control bg-dark text-light"
+            type="number"
+          />
+        </div>
+
+        <template #modal-footer="{ cancel }">
+          <b-button variant="danger" @click="cancel()">Cancel</b-button>
+          <b-button
+            :disabled="!isTagsCanCreated"
+            variant="success"
+            @click="createTags"
+            >Create
+          </b-button>
+        </template>
+      </b-modal>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .container {
   margin-top: 5vh;
   display: flex;
