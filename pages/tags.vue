@@ -77,7 +77,7 @@ export default Vue.extend({
       this.idTo = '';
     },
     createTags() {
-      const key = require('@/static/cert/public.pem').default;
+      const { default: key } = require('@/static/cert/public.pem');
 
       const count = this.idTo - this.idFrom + 1;
       const codes = [];
