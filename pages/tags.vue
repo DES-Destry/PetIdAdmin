@@ -80,7 +80,7 @@ export default Vue.extend({
       const key = require('@/static/cert/public.pem').default;
 
       const count = this.idTo - this.idFrom + 1;
-      const codes: string[] = [];
+      const codes = [];
 
       for (let i = 0; i < count; i++) {
         const code = randomBytes(this.codeLength);
