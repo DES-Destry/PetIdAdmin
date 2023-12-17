@@ -42,7 +42,7 @@ export default Vue.extend({
         this.idFrom !== '' &&
         this.idTo !== '' &&
         this.codeLength !== '' &&
-        this.idFrom <= this.idTo
+        +this.idFrom <= +this.idTo
       );
     },
   },
