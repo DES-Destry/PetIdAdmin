@@ -76,7 +76,7 @@ export default Vue.extend({
       this.idFrom = '';
       this.idTo = '';
     },
-    createTags() {
+    async createTags() {
       const { default: key } = require('@/static/cert/public.pem');
 
       const count = this.idTo - this.idFrom + 1;
@@ -90,7 +90,34 @@ export default Vue.extend({
         codes.push(encoded);
       }
 
-      // Send POST request
+      const createTagsResponse = await this.$adminController.createTags({
+        idFrom: +this.idFrom,
+        idTo: +this.idTo,
+        codes,
+      });
+
+      if (createTagsResponse.status === 401) {
+        LS.deleteAuthData();
+        await this.$router.push('/login?expired=true');
+
+        return;
+      }
+
+      if (createTagsResponse.status !== 200) {
+        this.$alert(
+          `Something went wrong... Real shit is happening (Status ${createTagsResponse.status})`,
+          'danger',
+          'createTagAlertContainer',
+        );
+
+        return;
+      }
+
+      this.$alert(
+        `Tags has been successfully created`,
+        'success',
+        'createTagAlertContainer',
+      );
     },
   },
 });
@@ -160,6 +187,8 @@ export default Vue.extend({
         title="Create new tags"
         @cancel="resetCreateTagsModal"
       >
+        <div id="createTagAlertContainer"></div>
+
         <div class="form-floating number-input mb-3">
           <label for="floatingIdPassword">ID From</label>
           <input
