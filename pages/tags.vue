@@ -1,5 +1,5 @@
 <script lang="ts">
-import { randomBytes } from 'crypto';
+import { publicEncrypt, randomBytes } from 'crypto';
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 import { TagReviewDto } from '~/api/dto/tag.dto';
@@ -74,17 +74,19 @@ export default Vue.extend({
       this.idTo = '';
     },
     createTags() {
+      const key = require('@/static/cert/public.pem').default;
+
       const count = this.idTo - this.idFrom + 1;
-      const codes = [];
+      const codes: string[] = [];
 
       for (let i = 0; i < count; i++) {
-        const code = randomBytes(16).toString('hex');
-        codes.push(code);
+        const code = randomBytes(16);
+
+        // Encode them with a public key
+        const encoded = publicEncrypt(key, code).toString('base64');
+        codes.push(encoded);
       }
 
-      this.$alert(`Tag count: ${count}`, 'success');
-
-      // Encode them with a public key
       // Send POST request
     },
   },
@@ -141,7 +143,7 @@ export default Vue.extend({
         </b-button>
       </footer>
 
-      <!-- Change password Modal -->
+      <!-- Create tags Modal -->
       <b-modal
         id="createTagsModal"
         body-bg-variant="dark"

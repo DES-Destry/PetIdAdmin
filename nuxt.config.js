@@ -65,6 +65,12 @@ export default {
     transpile: ["bootstrap-vue"],
     babel: {
       compact: true
+    },
+    extend(config) {
+      config.module.rules.push({
+        test: /\.pem$/,
+        loader: "raw-loader"
+      });
     }
   },
 
