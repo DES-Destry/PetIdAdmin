@@ -30,6 +30,7 @@ export default Vue.extend({
 
       idFrom: '',
       idTo: '',
+      codeLength: 8,
     };
   },
   computed: {
@@ -37,8 +38,10 @@ export default Vue.extend({
       return (
         typeof +this.idFrom === 'number' &&
         typeof +this.idTo === 'number' &&
+        typeof +this.codeLength === 'number' &&
         this.idFrom !== '' &&
         this.idTo !== '' &&
+        this.codeLength !== '' &&
         this.idFrom <= this.idTo
       );
     },
@@ -80,7 +83,7 @@ export default Vue.extend({
       const codes: string[] = [];
 
       for (let i = 0; i < count; i++) {
-        const code = randomBytes(16);
+        const code = randomBytes(this.codeLength);
 
         // Encode them with a public key
         const encoded = publicEncrypt(key, code).toString('base64');
@@ -171,6 +174,15 @@ export default Vue.extend({
           <input
             id="floatingIdTo"
             v-model="idTo"
+            class="form-control bg-dark text-light"
+            type="number"
+          />
+        </div>
+        <div class="form-floating number-input mb-3">
+          <label for="floatingCodeLength">Code length (in bytes)</label>
+          <input
+            id="floatingCodeLength"
+            v-model="codeLength"
             class="form-control bg-dark text-light"
             type="number"
           />
