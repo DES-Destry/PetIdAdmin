@@ -1,5 +1,5 @@
 <script lang="ts">
-import { publicEncrypt, randomBytes } from 'crypto';
+import { randomBytes } from 'crypto';
 import Vue from 'vue';
 import LS from '~/store/constants/LS';
 import { TagReviewDto } from '~/api/dto/tag.dto';
@@ -76,8 +76,42 @@ export default Vue.extend({
       this.idFrom = '';
       this.idTo = '';
     },
-    async createTags() {
-      const { default: key } = require('@/static/cert/public.pem');
+    arrayBufferToBase64(buffer: ArrayBuffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    },
+    async importPublicKey() {
+      const { default: keyFile } = require('@/static/cert/public.pem');
+
+      const pemHeader = '-----BEGIN PUBLIC KEY-----';
+      const pemFooter = '-----END PUBLIC KEY-----';
+      const pemContents = keyFile
+        .replace(pemHeader, '')
+        .replace(pemFooter, '')
+        .replace(/\s/g, ''); // Remove whitespace
+
+      const binaryDer = atob(pemContents);
+      const arrayBuffer = new Uint8Array(binaryDer.length);
+
+      for (let i = 0; i < binaryDer.length; i++) {
+        arrayBuffer[i] = binaryDer.charCodeAt(i);
+      }
+
+      return await crypto.subtle.importKey(
+        'spki',
+        arrayBuffer.buffer,
+        { name: 'RSA-OAEP', hash: { name: 'SHA-256' } },
+        true,
+        ['encrypt'],
+      );
+    },
+    createTags: async function () {
+      const key = await this.importPublicKey();
 
       const count = this.idTo - this.idFrom + 1;
       const codes = [];
@@ -86,7 +120,13 @@ export default Vue.extend({
         const code = randomBytes(this.codeLength);
 
         // Encode them with a public key
-        const encoded = publicEncrypt(key, code).toString('base64');
+        const encodedBuffer = await window.crypto.subtle.encrypt(
+          { name: 'RSA-OAEP' },
+          key,
+          code,
+        );
+        const encoded = this.arrayBufferToBase64(encodedBuffer);
+
         codes.push(encoded);
       }
 
