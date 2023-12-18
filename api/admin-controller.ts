@@ -3,6 +3,9 @@ import { AdminDto } from '~/api/dto/admin.dto';
 import { LoginDto } from '~/api/dto/login.dto';
 import LS from '~/store/constants/LS';
 import { PasswordChangedDto } from '~/api/dto/password-changed.dto';
+import { GetAllTagsResponseDto, TagFullInfoDto } from '~/api/dto/tag.dto';
+import { CreateTagsDto } from '~/api/dto/create-tags.dto';
+import { VoidResponseDto } from '~/api/dto/void-response.dto';
 
 export class AdminController extends ControllerBase {
   public setToken(token: string | null): void {
@@ -39,5 +42,17 @@ export class AdminController extends ControllerBase {
     }
 
     return response;
+  }
+
+  public async getAllTags() {
+    return await this.get<GetAllTagsResponseDto>('/api/admin/tag/all');
+  }
+
+  public async getTagById(id: number) {
+    return await this.get<TagFullInfoDto>(`/api/admin/tag/${id}`);
+  }
+
+  public async createTags(dto: CreateTagsDto) {
+    return await this.post<VoidResponseDto>('/api/admin/tags', dto);
   }
 }
