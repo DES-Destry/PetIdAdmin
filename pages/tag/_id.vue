@@ -255,6 +255,8 @@ export default Vue.extend({
         Generate control QR code
       </b-button>
 
+      <p>Public code: {{ publicCode }}</p>
+      <p>Control code: {{ controlCode }}</p>
       <p>Is already in use: {{ inUseSymbol }}</p>
       <p>Created at: {{ formattedCreatedAt }}</p>
       <p>Pet added at: {{ formattedPetAddedAt }}</p>
