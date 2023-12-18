@@ -117,13 +117,14 @@ export default Vue.extend({
       const codes = [];
 
       for (let i = 0; i < count; i++) {
-        const code = randomBytes(this.codeLength);
+        const code = randomBytes(this.codeLength).toString('hex');
+        const codeBuffer = Buffer.from(code);
 
         // Encode them with a public key
         const encodedBuffer = await window.crypto.subtle.encrypt(
           { name: 'RSA-OAEP' },
           key,
-          code,
+          codeBuffer,
         );
         const encoded = this.arrayBufferToBase64(encodedBuffer);
 
