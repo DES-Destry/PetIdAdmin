@@ -290,6 +290,12 @@ export default Vue.extend({
             Render
           </b-button>
         </section>
+
+        <p class="example-text">
+          Pay attention, this is valid example of code (hex string):
+          180402fca5580ed2
+        </p>
+        <p class="current-value">Current code in QR Code: {{ publicCode }}</p>
       </div>
 
       <template #modal-footer="{ ok }">
@@ -335,6 +341,12 @@ export default Vue.extend({
             Render
           </b-button>
         </section>
+
+        <p class="example-text">
+          Pay attention, this is valid example of code (UInt64):
+          4407682342885487000
+        </p>
+        <p class="current-value">Current code in QR Code: {{ controlCode }}</p>
       </div>
 
       <template #modal-footer="{ ok }">
@@ -414,5 +426,15 @@ export default Vue.extend({
 
 .render-button {
   margin-top: 10px;
+}
+
+.example-text {
+  font-size: 20px;
+  margin-top: 40px;
+}
+
+.current-value {
+  font-size: 20px;
+  margin-top: -10px;
 }
 </style>
