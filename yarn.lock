@@ -3717,6 +3717,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vue/compiler-sfc@npm:2.7.15":
+  version: 2.7.15
+  resolution: "@vue/compiler-sfc@npm:2.7.15"
+  dependencies:
+    "@babel/parser": "npm:^7.18.4"
+    postcss: "npm:^8.4.14"
+    source-map: "npm:^0.6.1"
+  checksum: d5dc7667bea091702657cd9263371d407d708ab0a571da01ebff5870b7800ac709678285c7dc86ae23a0757ff8a5de13dceffc063687be6a7700f58519bd5f57
+  languageName: node
+  linkType: hard
+
 "@vue/component-compiler-utils@npm:^3.1.0":
   version: 3.3.0
   resolution: "@vue/component-compiler-utils@npm:3.3.0"
@@ -11183,10 +11194,12 @@ __metadata:
     stylelint-config-recommended-vue: "npm:^1.4.0"
     stylelint-config-standard: "npm:^28.0.0"
     ts-loader: "npm:~8.2.0"
-    vue: "npm:^2.7.10"
+    vue: "npm:^2.7.15"
     vue-class-component: "npm:^7.2.6"
-    vue-server-renderer: "npm:^2.7.10"
-    vue-template-compiler: "npm:^2.7.10"
+    vue-router: "npm:3.6.5"
+    vue-server-renderer: "npm:^2.7.15"
+    vue-template-compiler: "npm:^2.7.15"
+    vuex: "npm:3.6.2"
   languageName: unknown
   linkType: soft
 
@@ -15239,26 +15252,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-router@npm:^3.6.5":
+"vue-router@npm:3.6.5, vue-router@npm:^3.6.5":
   version: 3.6.5
   resolution: "vue-router@npm:3.6.5"
   checksum: f1c81854a7bb943fe78ad1516acc948fffbf71646ee4d568c52c0c680dd4763152d1c317ac240a5066bc24682700b4698bd135d54c2fc7d8cb21d068a99e50ac
-  languageName: node
-  linkType: hard
-
-"vue-server-renderer@npm:^2.7.10":
-  version: 2.7.14
-  resolution: "vue-server-renderer@npm:2.7.14"
-  dependencies:
-    chalk: "npm:^4.1.2"
-    hash-sum: "npm:^2.0.0"
-    he: "npm:^1.2.0"
-    lodash.template: "npm:^4.5.0"
-    lodash.uniq: "npm:^4.5.0"
-    resolve: "npm:^1.22.0"
-    serialize-javascript: "npm:^6.0.0"
-    source-map: "npm:0.5.6"
-  checksum: 2cad14a1453b630c56d2da225c34d12ed1ceefe3d3aba0826f6d1c0ac50c5c6a235f9cd4b131171ae8e1f2187ab86c3fba3f9516e980e7cf166cd8b627e34f9b
   languageName: node
   linkType: hard
 
@@ -15288,7 +15285,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-template-compiler@npm:^2.6.14, vue-template-compiler@npm:^2.7.10":
+"vue-template-compiler@npm:^2.6.14":
   version: 2.7.14
   resolution: "vue-template-compiler@npm:2.7.14"
   dependencies:
@@ -15325,7 +15322,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuex@npm:^3.6.2":
+"vue@npm:^2.7.15":
+  version: 2.7.15
+  resolution: "vue@npm:2.7.15"
+  dependencies:
+    "@vue/compiler-sfc": "npm:2.7.15"
+    csstype: "npm:^3.1.0"
+  checksum: 92bc7bcef1a54fe6b98409a7094f7c8b1f4b8fcf52469380f130d0d671d581130b1ef8715f0e95020fc5dbffff7f519a0621206484b3fdee5e6319a76073fb0c
+  languageName: node
+  linkType: hard
+
+"vuex@npm:3.6.2, vuex@npm:^3.6.2":
   version: 3.6.2
   resolution: "vuex@npm:3.6.2"
   peerDependencies:
