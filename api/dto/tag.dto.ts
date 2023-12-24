@@ -1,19 +1,19 @@
 export class TagReviewDto {
-  id: number = -1;
-  isAlreadyInUse: boolean = false;
-  createdAt: Date = new Date(-1);
+  id: number;
+  isAlreadyInUse: boolean;
+  createdAt: Date;
 }
 
 export class GetAllTagsResponseDto {
-  tags: TagReviewDto[] = [];
+  tags: TagReviewDto[];
 }
 
 export class TagFullInfoDto {
-  id: number = -1;
-  publicCode: string = 'undefined';
-  controlCode: number = -1;
-  isAlreadyInUse: boolean = false;
-  createdAt: Date = new Date(-1);
-  petAddedAt: Date | null = null;
-  lastScannedAt: Date | null = null;
+  id: number;
+  publicCode: string;
+  controlCode: string;
+  isAlreadyInUse: boolean;
+  createdAt: Date;
+  petAddedAt: Date | null;
+  lastScannedAt: Date | null;
 }

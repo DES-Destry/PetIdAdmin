@@ -344,7 +344,7 @@ export default Vue.extend({
 
         <p class="example-text">
           Pay attention, this is valid example of code (UInt64):
-          4407682342885487000
+          4407682342885487058
         </p>
         <p class="current-value">Current code in QR Code: {{ controlCode }}</p>
       </div>
