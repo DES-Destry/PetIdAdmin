@@ -57,12 +57,14 @@ export class AdminController extends ControllerBase {
     return await this.post<VoidResponseDto>('/api/admin/tags', dto);
   }
 
-  public async getAllReports(input?: { isResolved?: boolean }) {
-    if (input.isResolved === null || input.isResolved === undefined)
-      return await this.get<Report>(`/api/admin/report/tag/all`);
+  public async getAllReports(input?: { isResolved?: boolean; tagId?: number }) {
+    let query = '';
+
+    if (input?.isResolved) query += `&isResolved=${input.isResolved}`;
+    if (input?.tagId) query += `&tagId=${input.tagId}`;
 
     return await this.get<Report>(
-      `/api/admin/report/tag/all?isResolved=${input.isResolved}`,
+      `/api/admin/report/tag/all${query ? `?${query}` : ''}`,
     );
   }
 }
