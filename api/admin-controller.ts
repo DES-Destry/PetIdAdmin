@@ -6,6 +6,7 @@ import { PasswordChangedDto } from '~/api/dto/password-changed.dto';
 import { GetAllTagsResponseDto, TagFullInfoDto } from '~/api/dto/tag.dto';
 import { CreateTagsDto } from '~/api/dto/create-tags.dto';
 import { VoidResponseDto } from '~/api/dto/void-response.dto';
+import { Report } from '~/api/dto/reports.dto';
 
 export class AdminController extends ControllerBase {
   public setToken(token: string | null): void {
@@ -54,5 +55,11 @@ export class AdminController extends ControllerBase {
 
   public async createTags(dto: CreateTagsDto) {
     return await this.post<VoidResponseDto>('/api/admin/tags', dto);
+  }
+
+  public async getAllReports(input: { isResolved: boolean }) {
+    return await this.get<Report>(
+      `/api/admin/report/tag/all?isResolved=${input.isResolved}`,
+    );
   }
 }
