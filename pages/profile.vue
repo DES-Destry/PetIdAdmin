@@ -221,6 +221,7 @@ export default Vue.extend({
 
     <div class="controls">
       <OptionNavigator class="control-item" page="tags" title="Tag explorer" />
+      <OptionNavigator class="control-item" page="reports" title="Reports" />
     </div>
   </div>
 </template>

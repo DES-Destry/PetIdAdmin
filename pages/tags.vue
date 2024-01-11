@@ -301,14 +301,14 @@ export default Vue.extend({
 }
 
 .tag-list {
-  // footer height (140px) + 50px
-  margin-bottom: 190px;
+  // footer height (100px) + 50px
+  margin-bottom: 150px;
 
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  width: 50vw;
+  width: 80vw;
 
   margin-top: 50px;
 
@@ -324,7 +324,7 @@ footer {
   align-items: center;
 
   width: 100vw;
-  height: 140px;
+  height: 100px;
 
   background: #151515;
   border-top: 1px solid #696969;
@@ -332,7 +332,7 @@ footer {
   z-index: 99;
 
   position: fixed;
-  margin-top: calc(100vh - 260px);
+  margin-top: calc(100vh - 8vh - 5vh - 100px);
 }
 
 .create-button {
