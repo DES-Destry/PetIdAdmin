@@ -5,6 +5,7 @@ export class Report {
   id: string;
   corruptedTag: TagReviewDto;
   reporter: AdminDto;
+  resolver?: AdminDto;
   isResolved: boolean;
   createdAt: Date;
 }

@@ -57,7 +57,10 @@ export class AdminController extends ControllerBase {
     return await this.post<VoidResponseDto>('/api/admin/tags', dto);
   }
 
-  public async getAllReports(input: { isResolved: boolean }) {
+  public async getAllReports(input?: { isResolved?: boolean }) {
+    if (input.isResolved === null || input.isResolved === undefined)
+      return await this.get<Report>(`/api/admin/report/tag/all`);
+
     return await this.get<Report>(
       `/api/admin/report/tag/all?isResolved=${input.isResolved}`,
     );
