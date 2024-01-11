@@ -301,8 +301,8 @@ export default Vue.extend({
 }
 
 .tag-list {
-  // footer height (140px) + 50px
-  margin-bottom: 190px;
+  // footer height (100px) + 50px
+  margin-bottom: 150px;
 
   display: flex;
   flex-direction: row;
