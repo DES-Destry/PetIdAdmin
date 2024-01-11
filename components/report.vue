@@ -58,7 +58,7 @@ export default Vue.extend({
 .report-card {
   background: #696969;
 
-  border: darkred solid 3px;
+  border: red solid 3px;
   border-radius: 10px;
   padding: 10px;
 
