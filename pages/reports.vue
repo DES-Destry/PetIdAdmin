@@ -17,13 +17,9 @@ export default Vue.extend({
     const resolvedResponse = await this.$adminController.getAllReports({
       isResolved: true,
     });
-    console.log('RESOLVED');
-    console.log(resolvedResponse);
     const notResolvedResponse = await this.$adminController.getAllReports({
       isResolved: false,
     });
-    console.log('NOT RESOLVED');
-    console.log(notResolvedResponse);
 
     if (!resolvedResponse || !notResolvedResponse) {
       this.$alert('Something went wrong... Real shit is happening', 'danger');
