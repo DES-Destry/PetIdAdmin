@@ -2,8 +2,11 @@
 import Vue from 'vue';
 import QrCreator from 'qr-creator';
 import LS from '~/store/constants/LS';
+import { Report } from '~/api/dto/reports.dto';
+import ReportCard from '~/components/report.vue';
 
 export default Vue.extend({
+  components: { ReportCard },
   data() {
     return {
       id: this.$route.params.id,
@@ -15,6 +18,7 @@ export default Vue.extend({
       lastScannedAt: null,
 
       isNotFound: true,
+      reports: [] as Report[],
     };
   },
   computed: {
@@ -46,13 +50,16 @@ export default Vue.extend({
   },
   async mounted() {
     const tagResponse = await this.$adminController.getTagById(this.id);
+    const reportsResponse = await this.$adminController.getAllReports({
+      tagId: this.id,
+    });
 
-    if (!tagResponse) {
+    if (!tagResponse || !reportsResponse) {
       this.$alert('Something went wrong... Real shit is happening', 'danger');
       return;
     }
 
-    if (tagResponse.status === 401) {
+    if (tagResponse.status === 401 || reportsResponse.status === 401) {
       LS.deleteAuthData();
       await this.$router.push('/login?expired=true');
 
@@ -63,9 +70,9 @@ export default Vue.extend({
       return;
     }
 
-    if (tagResponse.status !== 200) {
+    if (tagResponse.status !== 200 || reportsResponse.status !== 200) {
       this.$alert(
-        `Something went wrong... Real shit is happening (Status ${tagResponse.status})`,
+        `Something went wrong... Real shit is happening (Statuses: ${tagResponse.status}, ${reportsResponse.status})`,
         'danger',
       );
       return;
@@ -78,6 +85,8 @@ export default Vue.extend({
     this.createdAt = tagResponse.data.createdAt;
     this.petAddedAt = tagResponse.data.petAddedAt;
     this.lastScannedAt = tagResponse.data.lastScannedAt;
+
+    this.reports = reportsResponse.data.reports;
   },
   methods: {
     renderMainQr() {
@@ -261,6 +270,21 @@ export default Vue.extend({
       <p>Created at: {{ formattedCreatedAt }}</p>
       <p>Pet added at: {{ formattedPetAddedAt }}</p>
       <p>Last scanned at: {{ formattedLastScannedAt }}</p>
+
+      <div class="reports">
+        <h1 class="id">Reports of {{ idString }}</h1>
+      </div>
+
+      <div class="report-list">
+        <report-card
+          v-for="report of reports"
+          :key="report.id"
+          :created-at="report.createdAt"
+          :is-resolved="report.isResolved"
+          :reporter="report.reporter.username"
+          :tag-id="report.corruptedTag.id"
+        ></report-card>
+      </div>
     </div>
 
     <b-modal
@@ -400,6 +424,29 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   font-size: 30px;
+}
+
+.reports {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  margin-top: 60px;
+}
+
+.report-list {
+  margin-bottom: 50px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  margin-top: 20px;
+
+  * {
+    margin: 15px;
+  }
 }
 
 .generate {
