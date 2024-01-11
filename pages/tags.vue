@@ -308,7 +308,7 @@ export default Vue.extend({
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  width: 50vw;
+  width: 80vw;
 
   margin-top: 50px;
 
