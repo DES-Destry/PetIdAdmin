@@ -22,7 +22,7 @@ export default Vue.extend({
   },
   methods: {
     openTagPage() {
-      this.$router.push(`/tag/${this.id}`);
+      this.$router.push(`/tag/${this.tagId}`);
     },
   },
 });
