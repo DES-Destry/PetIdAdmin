@@ -57,6 +57,10 @@ export class AdminController extends ControllerBase {
     return await this.post<VoidResponseDto>('/api/admin/tags', dto);
   }
 
+  public async clearTag(tagId: number) {
+    return await this.post<VoidResponseDto>(`/api/admin/tag/${tagId}/clear`);
+  }
+
   public async getAllReports(input?: { isResolved?: boolean; tagId?: number }) {
     let query = '';
 
