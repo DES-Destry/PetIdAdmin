@@ -1,13 +1,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import QrCreator from 'qr-creator';
+import { BFormCheckbox } from 'bootstrap-vue';
 import { Report, ReportsDto } from '~/api/dto/reports.dto';
 import ReportCard from '~/components/report.vue';
 import { ErrorHandler } from '~/api/error-handler';
 import { TagFullInfoDto } from '~/api/dto/tag.dto';
 
 export default Vue.extend({
-  components: { ReportCard },
+  components: { ReportCard, BFormCheckbox },
   data() {
     return {
       id: this.$route.params.id,
@@ -20,6 +21,7 @@ export default Vue.extend({
 
       isNotFound: true,
       reports: [] as Report[],
+      reportsOnlyNotResolved: false,
 
       clearTagIdConfirmation: '',
     };
@@ -293,18 +295,28 @@ export default Vue.extend({
         <h1 class="id">Reports of {{ idString }}</h1>
       </div>
 
+      <b-form-checkbox
+        id="checkbox-1"
+        v-model="reportsOnlyNotResolved"
+        name="checkbox-1"
+      >
+        Only not resolved
+      </b-form-checkbox>
+
       <div class="report-list">
-        <report-card
-          v-for="report of reports"
-          :id="report.id"
-          :key="report.id"
-          :created-at="report.createdAt"
-          :is-resolvable="true"
-          :is-resolved="report.isResolved"
-          :reporter="report.reporter.username"
-          :resolver="report.resolver?.username"
-          :tag-id="report.corruptedTag.id"
-        ></report-card>
+        <div v-for="report of reports" :key="report.id">
+          <report-card
+            v-if="reportsOnlyNotResolved ? !report.isResolved : true"
+            :id="report.id"
+            :created-at="report.createdAt"
+            :is-resolvable="true"
+            :is-resolved="report.isResolved"
+            :reporter="report.reporter.username"
+            :resolver="report.resolver?.username"
+            :tag-id="report.corruptedTag.id"
+            class="report-item"
+          ></report-card>
+        </div>
       </div>
     </div>
 
@@ -488,6 +500,9 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   font-size: 30px;
+  width: 50vw;
+
+  justify-items: center;
 }
 
 .reports {
@@ -507,10 +522,10 @@ export default Vue.extend({
   justify-content: space-around;
 
   margin-top: 20px;
+}
 
-  * {
-    margin: 15px;
-  }
+.report-item {
+  margin: 15px;
 }
 
 .generate,
