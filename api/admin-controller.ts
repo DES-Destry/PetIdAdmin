@@ -62,13 +62,8 @@ export class AdminController extends ControllerBase {
   }
 
   public async getAllReports(input?: { isResolved?: boolean; tagId?: number }) {
-    let query = '';
-
-    if (input?.isResolved) query += `&isResolved=${input.isResolved}`;
-    if (input?.tagId) query += `&tagId=${input.tagId}`;
-
     return await this.get<ReportsDto>(
-      `/api/admin/report/tag/all${query ? `?${query}` : ''}`,
+      `/api/admin/report/tag/all${this.buildQuery(input)}`,
     );
   }
 
@@ -76,5 +71,18 @@ export class AdminController extends ControllerBase {
     return await this.post<VoidResponseDto>(
       `/api/admin/report/${reportId}/resolve`,
     );
+  }
+
+  private buildQuery(queries: Record<string, any>): string {
+    if (!queries) return '';
+
+    const strings = [];
+    for (const query in queries) {
+      strings.push(`${query}=${queries[query]}`);
+    }
+
+    if (strings.length === 0) return '';
+
+    return `?${strings.join('&')}`;
   }
 }
