@@ -46,11 +46,11 @@ export class AdminController extends ControllerBase {
   }
 
   public async getAllTags() {
-    return await this.get<GetAllTagsResponseDto>('/api/admin/tag/all');
+    return await this.get<GetAllTagsResponseDto>('/api/admin/tags');
   }
 
   public async getTagById(id: number) {
-    return await this.get<TagFullInfoDto>(`/api/admin/tag/${id}`);
+    return await this.get<TagFullInfoDto>(`/api/admin/tags/${id}`);
   }
 
   public async createTags(dto: CreateTagsDto) {
@@ -58,18 +58,18 @@ export class AdminController extends ControllerBase {
   }
 
   public async clearTag(tagId: number) {
-    return await this.post<VoidResponseDto>(`/api/admin/tag/${tagId}/clear`);
+    return await this.post<VoidResponseDto>(`/api/admin/tags/${tagId}/clear`);
   }
 
   public async getAllReports(input?: { isResolved?: boolean; tagId?: number }) {
     return await this.get<ReportsDto>(
-      `/api/admin/report/tag/all${this.buildQuery(input)}`,
+      `/api/admin/tags/reports${this.buildQuery(input)}`,
     );
   }
 
   public async resolveReport(reportId: string) {
     return await this.post<VoidResponseDto>(
-      `/api/admin/report/${reportId}/resolve`,
+      `/api/admin/reports/${reportId}/resolve`,
     );
   }
 
