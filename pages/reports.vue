@@ -1,48 +1,37 @@
 <script lang="ts">
 import Vue from 'vue';
 import { BTab } from 'bootstrap-vue';
-import LS from '~/store/constants/LS';
 import ReportCard from '~/components/report.vue';
-import { Report } from '~/api/dto/reports.dto';
+import { Report, ReportsDto } from '~/api/dto/reports.dto';
+import { ErrorHandler } from '~/api/error-handler';
 
 export default Vue.extend({
   components: { ReportCard, BTab },
   data: () => {
     return {
-      resolvedReports: [] as Report[],
       notResolvedReports: [] as Report[],
+      resolvedReports: [] as Report[],
     };
   },
   async mounted() {
-    const resolvedResponse = await this.$adminController.getAllReports({
-      isResolved: true,
-    });
     const notResolvedResponse = await this.$adminController.getAllReports({
       isResolved: false,
     });
+    const resolvedResponse = await this.$adminController.getAllReports({
+      isResolved: true,
+    });
 
-    if (!resolvedResponse || !notResolvedResponse) {
-      this.$alert('Something went wrong... Real shit is happening', 'danger');
-      return;
-    }
+    const notResolvedData = await ErrorHandler.handleErrorWithModal<ReportsDto>(
+      this,
+      notResolvedResponse,
+    );
+    const resolvedData = await ErrorHandler.handleErrorWithModal<ReportsDto>(
+      this,
+      resolvedResponse,
+    );
 
-    if (resolvedResponse.status === 401 || notResolvedResponse.status === 401) {
-      LS.deleteAuthData();
-      await this.$router.push('/login?expired=true');
-
-      return;
-    }
-
-    if (resolvedResponse.status !== 200 || notResolvedResponse.status !== 200) {
-      this.$alert(
-        `Something went wrong... Real shit is happening (Statuses: ${resolvedResponse.status}, ${notResolvedResponse.status})`,
-        'danger',
-      );
-      return;
-    }
-
-    this.resolvedReports = resolvedResponse.data.reports;
-    this.notResolvedReports = notResolvedResponse.data.reports;
+    if (notResolvedData) this.notResolvedReports = notResolvedData.reports;
+    if (resolvedData) this.resolvedReports = resolvedData.reports;
   },
 });
 </script>

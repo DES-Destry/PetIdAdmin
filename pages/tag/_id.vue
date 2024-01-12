@@ -1,12 +1,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import QrCreator from 'qr-creator';
-import LS from '~/store/constants/LS';
-import { Report } from '~/api/dto/reports.dto';
+import { BFormCheckbox } from 'bootstrap-vue';
+import { Report, ReportsDto } from '~/api/dto/reports.dto';
 import ReportCard from '~/components/report.vue';
+import { ErrorHandler } from '~/api/error-handler';
+import { TagFullInfoDto } from '~/api/dto/tag.dto';
 
 export default Vue.extend({
-  components: { ReportCard },
+  components: { ReportCard, BFormCheckbox },
   data() {
     return {
       id: this.$route.params.id,
@@ -19,6 +21,9 @@ export default Vue.extend({
 
       isNotFound: true,
       reports: [] as Report[],
+      reportsOnlyNotResolved: false,
+
+      clearTagIdConfirmation: '',
     };
   },
   computed: {
@@ -47,6 +52,9 @@ export default Vue.extend({
       if (!this.lastScannedAt) return 'not scanned yet';
       return new Date(this.lastScannedAt).toLocaleDateString('en-US');
     },
+    isClearAvailable() {
+      return this.id.toString() === this.clearTagIdConfirmation;
+    },
   },
   async mounted() {
     const tagResponse = await this.$adminController.getTagById(this.id);
@@ -54,39 +62,28 @@ export default Vue.extend({
       tagId: this.id,
     });
 
-    if (!tagResponse || !reportsResponse) {
-      this.$alert('Something went wrong... Real shit is happening', 'danger');
-      return;
+    const tagData = await ErrorHandler.handleErrorWithModal<TagFullInfoDto>(
+      this,
+      tagResponse,
+      { 404: () => null },
+    );
+
+    const reportsData = await ErrorHandler.handleErrorWithModal<ReportsDto>(
+      this,
+      reportsResponse,
+    );
+
+    if (tagData) {
+      this.isNotFound = false;
+      this.publicCode = tagData.publicCode;
+      this.controlCode = tagData.controlCode;
+      this.isAlreadyInUse = tagData.isAlreadyInUse;
+      this.createdAt = tagData.createdAt;
+      this.petAddedAt = tagData.petAddedAt;
+      this.lastScannedAt = tagData.lastScannedAt;
     }
 
-    if (tagResponse.status === 401 || reportsResponse.status === 401) {
-      LS.deleteAuthData();
-      await this.$router.push('/login?expired=true');
-
-      return;
-    }
-
-    if (tagResponse.status === 404) {
-      return;
-    }
-
-    if (tagResponse.status !== 200 || reportsResponse.status !== 200) {
-      this.$alert(
-        `Something went wrong... Real shit is happening (Statuses: ${tagResponse.status}, ${reportsResponse.status})`,
-        'danger',
-      );
-      return;
-    }
-
-    this.isNotFound = false;
-    this.publicCode = tagResponse.data.publicCode;
-    this.controlCode = tagResponse.data.controlCode;
-    this.isAlreadyInUse = tagResponse.data.isAlreadyInUse;
-    this.createdAt = tagResponse.data.createdAt;
-    this.petAddedAt = tagResponse.data.petAddedAt;
-    this.lastScannedAt = tagResponse.data.lastScannedAt;
-
-    this.reports = reportsResponse.data.reports;
+    if (reportsData) this.reports = reportsData.reports;
   },
   methods: {
     renderMainQr() {
@@ -241,6 +238,20 @@ export default Vue.extend({
       a.download = `control-qr-${this.id}.png`;
       a.click();
     },
+    async clearTag() {
+      const clearResponse = await this.$adminController.clearTag(this.id);
+      await ErrorHandler.handleErrorWithModal(this, clearResponse, {
+        403: () => {
+          this.$alert(
+            `You can't clear tag, that doesn't have not-resolved report!`,
+            'warning',
+          );
+          return null;
+        },
+      });
+
+      this.clearTagIdConfirmation = '';
+    },
   },
 });
 </script>
@@ -263,6 +274,15 @@ export default Vue.extend({
         <b-icon icon="plus-square-dotted"></b-icon>
         Generate control QR code
       </b-button>
+      <b-button
+        v-if="isAlreadyInUse"
+        v-b-modal.clearModal
+        class="clear"
+        variant="danger"
+      >
+        <b-icon icon="trash"></b-icon>
+        Clear tag (delete pet)
+      </b-button>
 
       <p>Public code: {{ publicCode }}</p>
       <p>Control code: {{ controlCode }}</p>
@@ -275,15 +295,28 @@ export default Vue.extend({
         <h1 class="id">Reports of {{ idString }}</h1>
       </div>
 
+      <b-form-checkbox
+        id="checkbox-1"
+        v-model="reportsOnlyNotResolved"
+        name="checkbox-1"
+      >
+        Only not resolved
+      </b-form-checkbox>
+
       <div class="report-list">
-        <report-card
-          v-for="report of reports"
-          :key="report.id"
-          :created-at="report.createdAt"
-          :is-resolved="report.isResolved"
-          :reporter="report.reporter.username"
-          :tag-id="report.corruptedTag.id"
-        ></report-card>
+        <div v-for="report of reports" :key="report.id">
+          <report-card
+            v-if="reportsOnlyNotResolved ? !report.isResolved : true"
+            :id="report.id"
+            :created-at="report.createdAt"
+            :is-resolvable="true"
+            :is-resolved="report.isResolved"
+            :reporter="report.reporter.username"
+            :resolver="report.resolver?.username"
+            :tag-id="report.corruptedTag.id"
+            class="report-item"
+          ></report-card>
+        </div>
       </div>
     </div>
 
@@ -388,6 +421,49 @@ export default Vue.extend({
         </b-button>
       </template>
     </b-modal>
+
+    <b-modal
+      id="clearModal"
+      body-bg-variant="dark"
+      body-text-variant="light"
+      centered
+      class="modal fade"
+      footer-bg-variant="dark"
+      footer-text-variant="light"
+      header-bg-variant="primary"
+      header-text-variant="light"
+      size="s"
+      title="Are you sure?"
+      @cancel="clearTagIdConfirmation = ''"
+    >
+      <div class="confirmation-content">
+        <div id="clearAlertContainer"></div>
+
+        <div class="form-floating number-input mb-3">
+          <label for="floatingId"
+            >To clear this tag you must type his ID. ({{ id }})</label
+          >
+          <input
+            id="floatingId"
+            v-model="clearTagIdConfirmation"
+            class="form-control bg-dark text-light"
+            type="number"
+          />
+        </div>
+      </div>
+
+      <template #modal-footer="{ cancel }">
+        <b-button variant="primary" @click="cancel()"> Cancel</b-button>
+        <b-button
+          :disabled="!isClearAvailable"
+          variant="danger"
+          @click="clearTag"
+        >
+          <b-icon icon="trash"></b-icon>
+          Clear!
+        </b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -424,6 +500,9 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   font-size: 30px;
+  width: 50vw;
+
+  justify-items: center;
 }
 
 .reports {
@@ -443,13 +522,14 @@ export default Vue.extend({
   justify-content: space-around;
 
   margin-top: 20px;
-
-  * {
-    margin: 15px;
-  }
 }
 
-.generate {
+.report-item {
+  margin: 15px;
+}
+
+.generate,
+.clear {
   margin-bottom: 15px;
   font-size: 25px;
   width: 50vw;
