@@ -300,6 +300,7 @@ export default Vue.extend({
           :created-at="report.createdAt"
           :is-resolved="report.isResolved"
           :reporter="report.reporter.username"
+          :resolver="report.resolver?.username"
           :tag-id="report.corruptedTag.id"
         ></report-card>
       </div>
