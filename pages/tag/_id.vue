@@ -296,8 +296,10 @@ export default Vue.extend({
       <div class="report-list">
         <report-card
           v-for="report of reports"
+          :id="report.id"
           :key="report.id"
           :created-at="report.createdAt"
+          :is-resolvable="true"
           :is-resolved="report.isResolved"
           :reporter="report.reporter.username"
           :resolver="report.resolver?.username"

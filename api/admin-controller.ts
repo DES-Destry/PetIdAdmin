@@ -71,4 +71,10 @@ export class AdminController extends ControllerBase {
       `/api/admin/report/tag/all${query ? `?${query}` : ''}`,
     );
   }
+
+  public async resolveReport(reportId: string) {
+    return await this.post<VoidResponseDto>(
+      `/api/admin/report/${reportId}/resolve`,
+    );
+  }
 }
