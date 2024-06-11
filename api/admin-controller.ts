@@ -14,11 +14,11 @@ export class AdminController extends ControllerBase {
   }
 
   public async auth() {
-    return await this.get<AdminDto>('/api/admin/auth');
+    return await this.get<AdminDto>('/admin/auth');
   }
 
   public async login(username: string, password: string) {
-    const response = await this.post<LoginDto>('/api/admin/login', {
+    const response = await this.post<LoginDto>('/admin/login', {
       username,
       password,
     });
@@ -32,7 +32,7 @@ export class AdminController extends ControllerBase {
   }
 
   public async changePassword(oldPassword: string, newPassword: string) {
-    const response = await this.put<PasswordChangedDto>('/api/admin/password', {
+    const response = await this.put<PasswordChangedDto>('/admin/password', {
       oldPassword,
       newPassword,
     });
@@ -46,30 +46,30 @@ export class AdminController extends ControllerBase {
   }
 
   public async getAllTags() {
-    return await this.get<GetAllTagsResponseDto>('/api/admin/tags');
+    return await this.get<GetAllTagsResponseDto>('/admin/tags');
   }
 
   public async getTagById(id: number) {
-    return await this.get<TagFullInfoDto>(`/api/admin/tags/${id}`);
+    return await this.get<TagFullInfoDto>(`/admin/tags/${id}`);
   }
 
   public async createTags(dto: CreateTagsDto) {
-    return await this.post<VoidResponseDto>('/api/admin/tags', dto);
+    return await this.post<VoidResponseDto>('/admin/tags', dto);
   }
 
   public async clearTag(tagId: number) {
-    return await this.post<VoidResponseDto>(`/api/admin/tags/${tagId}/clear`);
+    return await this.post<VoidResponseDto>(`/admin/tags/${tagId}/clear`);
   }
 
   public async getAllReports(input?: { isResolved?: boolean; tagId?: number }) {
     return await this.get<ReportsDto>(
-      `/api/admin/tags/reports${this.buildQuery(input)}`,
+      `/admin/tags/reports${this.buildQuery(input)}`,
     );
   }
 
   public async resolveReport(reportId: string) {
     return await this.post<VoidResponseDto>(
-      `/api/admin/reports/${reportId}/resolve`,
+      `/admin/reports/${reportId}/resolve`,
     );
   }
 
